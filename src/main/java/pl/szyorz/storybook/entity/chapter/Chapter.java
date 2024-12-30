@@ -2,6 +2,9 @@ package pl.szyorz.storybook.entity.chapter;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import pl.szyorz.storybook.entity.book.Book;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -19,6 +22,11 @@ public class Chapter {
     @GeneratedValue
     private UUID id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "book_id", nullable = false)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Book book;
     /*
     TODO: Bind to user/author and also to book
 
@@ -33,13 +41,14 @@ public class Chapter {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "previous_chapter")
-    private Chapter previousChapter;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "next_chapter")
-    private Chapter nextChapter;
+//    @OneToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "previous_chapter")
+//    private Chapter previousChapter;
+//
+//    @OneToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "next_chapter")
+//    private Chapter nextChapter;
+    private int position;
 
 
     // Only UUID matters
@@ -62,11 +71,11 @@ public class Chapter {
         return result;
     }
 
-    public boolean hasNextChapter() {
-        return this.nextChapter.getId() != null;
-    }
-
-    public boolean hasPreviousChapter() {
-        return previousChapter.getId() != null;
-    }
+//    public boolean hasNextChapter() {
+//        return this.nextChapter.getId() != null;
+//    }
+//
+//    public boolean hasPreviousChapter() {
+//        return previousChapter.getId() != null;
+//    }
 }

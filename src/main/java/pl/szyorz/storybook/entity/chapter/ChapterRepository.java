@@ -10,5 +10,7 @@ public interface ChapterRepository extends Slice<Chapter> {
 
     List<Chapter> findAll();
     Optional<Chapter> findById(UUID id);
+    Optional<Chapter> findByIdAndBookId(UUID id, UUID bookId);
+    Optional<Chapter> findByBookIdAndPosition(UUID bookId, int position);
     Chapter save(Chapter chapter);
 }

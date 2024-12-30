@@ -47,9 +47,7 @@ public class ChapterJPATest {
         when(chapter1.getId()).thenReturn(chapter1Id);
         when(chapter2.getId()).thenReturn(chapter2Id);
 
-        // Mock the OneToOne relationships
-        when(chapter1.getNextChapter()).thenReturn(chapter2);
-        when(chapter2.getPreviousChapter()).thenReturn(chapter1);
+
 
     }
 
@@ -62,8 +60,8 @@ public class ChapterJPATest {
         //given
         Chapter chapter1 = new Chapter("First", "First chapter", "dasdasdasd");
         Chapter chapter2 = new Chapter("Second", "Second chapter", "dasdasdasd");
-        chapter1.setNextChapter(chapter2);
-        chapter2.setPreviousChapter(chapter1);
+        chapter1.setPosition(1);
+        chapter2.setPosition(2);
         when(repository.findAll()).thenReturn(List.of(chapter1, chapter2));
 
         assertEquals(List.of(chapter1, chapter2), service.getAll());
@@ -80,7 +78,7 @@ public class ChapterJPATest {
     @Test
     void shouldUpdateBetween() {
         // Mockito isn't really for checking database persistence so.....
-        // TODO: implement this
+        // TODO: implement this, need in-memory database
     }
 
 }
