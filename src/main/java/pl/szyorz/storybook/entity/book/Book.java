@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import pl.szyorz.storybook.entity.chapter.Chapter;
+import pl.szyorz.storybook.entity.user.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,4 +26,8 @@ public class Book {
     @OrderBy("position ASC")
     @EqualsAndHashCode.Exclude
     private List<Chapter> chapters = new ArrayList<>();
+
+    /* No collaboration is allowed, sorry */
+    @ManyToOne
+    private User author;
 }

@@ -12,9 +12,10 @@ import java.util.UUID;
 @Data
 @Entity
 public class Chapter {
-    public Chapter(String title, String description, String content) {
+    public Chapter(String title, String description, String authorNote, String content) {
         this.title = title;
         this.description = description;
+        this.authorNote = authorNote;
         this.content = content;
     }
 
@@ -36,6 +37,7 @@ public class Chapter {
 
     private String title;
     private String description;
+    private String authorNote;
     private String content;
 
     private LocalDateTime createdAt;

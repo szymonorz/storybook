@@ -58,8 +58,8 @@ public class ChapterJPATest {
     @Test
     void shouldReturnAllChapters() {
         //given
-        Chapter chapter1 = new Chapter("First", "First chapter", "dasdasdasd");
-        Chapter chapter2 = new Chapter("Second", "Second chapter", "dasdasdasd");
+        Chapter chapter1 = new Chapter("First", "First chapter", null, "dasdasdasd");
+        Chapter chapter2 = new Chapter("Second", "Second chapter", null, "dasdasdasd");
         chapter1.setPosition(1);
         chapter2.setPosition(2);
         when(repository.findAll()).thenReturn(List.of(chapter1, chapter2));

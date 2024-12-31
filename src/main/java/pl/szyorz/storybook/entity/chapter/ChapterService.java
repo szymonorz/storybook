@@ -30,6 +30,7 @@ public class ChapterService {
         return new Chapter(
                 dto.name(),
                 dto.description(),
+                dto.authorNote(),
                 dto.content()
         );
     }

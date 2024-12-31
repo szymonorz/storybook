@@ -57,6 +57,7 @@ public class BookService {
         return new Chapter(
                 dto.chapterTitle(),
                 dto.chapterDescription(),
+                dto.authorNote(),
                 dto.chapterContent()
         );
     }
