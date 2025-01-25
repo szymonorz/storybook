@@ -16,6 +16,7 @@ public class Role {
     @GeneratedValue
     private UUID id;
 
+    @Column(unique = true)
     private String name;
     private String description;
 
@@ -31,5 +32,5 @@ public class Role {
     @CollectionTable(name = "role_privileges", joinColumns = @JoinColumn(name = "role_id"))
     @Column(name = "privilege")
     @Enumerated(EnumType.STRING)
-    private Set<RolePrivilege> privileges;
+    private List<RolePrivilege> privileges;
 }

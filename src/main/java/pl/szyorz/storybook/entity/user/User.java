@@ -6,6 +6,7 @@ import pl.szyorz.storybook.entity.book.Book;
 import pl.szyorz.storybook.entity.role.Role;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -23,5 +24,5 @@ public class User {
     private List<Role> userRoles;
 
     @OneToMany
-    private List<Book> books;
+    private Set<Book> books;
 }
