@@ -17,7 +17,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import pl.szyorz.storybook.auth.AuthenticationFilter;
 import pl.szyorz.storybook.entity.user.DetailsService;
-import pl.szyorz.storybook.entity.user.UserService;
 
 @Configuration
 @EnableWebSecurity

@@ -6,7 +6,6 @@ import pl.szyorz.storybook.entity.role.privilege.RolePrivilege;
 import pl.szyorz.storybook.entity.user.User;
 
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @Data
