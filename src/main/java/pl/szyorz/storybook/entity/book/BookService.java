@@ -4,17 +4,34 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.szyorz.storybook.entity.book.data.ChapterOrderUpdateRequest;
+import pl.szyorz.storybook.entity.book.data.CreateBookRequest;
 import pl.szyorz.storybook.entity.book.data.NewBookChapterRequest;
 import pl.szyorz.storybook.entity.chapter.Chapter;
 import pl.szyorz.storybook.entity.chapter.ChapterRepository;
+import pl.szyorz.storybook.entity.user.User;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
 public class BookService {
     private BookRepository bookRepository;
     private ChapterRepository chapterRepository;
+
+    public Optional<Book> createBook(CreateBookRequest req, User author) {
+        Book book = mapToBookEntity(req, author);
+        return Optional.of(bookRepository.save(book));
+    }
+
+    public Optional<Book> getBookById(UUID bookId) {
+        return bookRepository.findById(bookId);
+    }
+
+    public List<Book> getBooksByUserId(UUID userId) {
+        return bookRepository.findAllByAuthorId(userId);
+    }
 
     @Transactional
     public void addNewChapter(NewBookChapterRequest bookChapterRequest) {
@@ -60,5 +77,14 @@ public class BookService {
                 dto.authorNote(),
                 dto.chapterContent()
         );
+    }
+
+    private Book mapToBookEntity(CreateBookRequest req, User author) {
+        Book book = new Book();
+        book.setTitle(req.title());
+        book.setDescription(req.description());
+        book.setAuthor(author);
+
+        return book;
     }
 }

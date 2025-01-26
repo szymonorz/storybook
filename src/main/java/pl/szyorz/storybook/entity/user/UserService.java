@@ -5,10 +5,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.szyorz.storybook.entity.role.Role;
 import pl.szyorz.storybook.entity.role.RoleService;
-import pl.szyorz.storybook.entity.user.data.CreateUserRequest;
-import pl.szyorz.storybook.entity.user.data.LoginRequest;
-import pl.szyorz.storybook.entity.user.data.UpdateUserRolesRequest;
-import pl.szyorz.storybook.entity.user.data.UserResponse;
+import pl.szyorz.storybook.entity.role.data.RoleResponse;
+import pl.szyorz.storybook.entity.user.data.*;
 
 import java.util.*;
 
@@ -49,6 +47,10 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public Optional<UserWithoutRolesResponse> getUser(UUID userId) {
+        return userRepository.findById(userId).map(user -> new UserWithoutRolesResponse(user.getId(), user.getUsername()));
+    }
+
     public List<Role> getUserRoles(UUID userId) {
         return roleService.getUserRoles(userId);
     }
@@ -71,9 +73,16 @@ public class UserService {
 
 
     private UserResponse convertDBUserToAPIUser(User user) {
-        return new UserResponse(user.getUsername(),
+        return new UserResponse(user.getId(),
+                                user.getUsername(),
                                 user.getEmail(),
-                                user.getUserRoles());
+                                user.getUserRoles().stream()
+                                        .map(role -> new RoleResponse(role.getId(),
+                                                role.getName(),
+                                                role.getDescription(),
+                                                role.getPrivileges())
+                                        ).toList()
+        );
     }
 
 
