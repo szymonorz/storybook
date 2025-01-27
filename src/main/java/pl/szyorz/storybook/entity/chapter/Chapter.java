@@ -3,6 +3,7 @@ package pl.szyorz.storybook.entity.chapter;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import pl.szyorz.storybook.entity.book.Book;
 
@@ -11,6 +12,7 @@ import java.util.UUID;
 
 @Data
 @Entity
+@NoArgsConstructor
 public class Chapter {
     public Chapter(String title, String description, String authorNote, String content) {
         this.title = title;

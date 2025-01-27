@@ -22,7 +22,7 @@ public class Book {
     private String title;
     private String description;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "book")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "book", fetch = FetchType.EAGER)
     @OrderBy("position ASC")
     @EqualsAndHashCode.Exclude
     private List<Chapter> chapters = new ArrayList<>();
