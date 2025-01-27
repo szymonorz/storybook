@@ -21,7 +21,6 @@ import pl.szyorz.storybook.config.JWTConfig;
 import pl.szyorz.storybook.entity.user.DetailsService;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,8 +40,8 @@ public class AuthorizationFilter extends OncePerRequestFilter {
                 new AntPathRequestMatcher( "/swagger-ui/**", "GET"),
                 new AntPathRequestMatcher( "/v3/api-docs/**", "GET"),
                 new AntPathRequestMatcher("/auth/**", "POST" ),
-                new AntPathRequestMatcher("/api/user", "GET"),
-                new AntPathRequestMatcher("/api/user/{userId}", "GET")
+                new AntPathRequestMatcher("/api/user/**", "GET"),
+                new AntPathRequestMatcher("/api/book/**", "GET")
             );
 
     @Override
@@ -55,7 +54,6 @@ public class AuthorizationFilter extends OncePerRequestFilter {
             if (authHeader != null && authHeader.startsWith("Bearer ")) {
                 try {
                     String token = authHeader.substring(jwtConfig.getPrefix().length());
-                    System.out.println(jwtConfig.getSecret());
                     Algorithm algorithm = Algorithm.HMAC512(jwtConfig.getSecret().getBytes());
                     JWTVerifier verifier = JWT.require(algorithm).build();
                     DecodedJWT decodedJWT = verifier.verify(token);

@@ -71,17 +71,14 @@ public class UserService {
         return Optional.of(resp);
     }
 
+    public Optional<UserResponse> getByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .map(this::convertDBUserToAPIUser);
+    }
 
     private UserResponse convertDBUserToAPIUser(User user) {
         return new UserResponse(user.getId(),
-                                user.getUsername(),
-                                user.getEmail(),
-                                user.getUserRoles().stream()
-                                        .map(role -> new RoleResponse(role.getId(),
-                                                role.getName(),
-                                                role.getDescription(),
-                                                role.getPrivileges())
-                                        ).toList()
+                                user.getUsername()
         );
     }
 

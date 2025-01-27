@@ -11,6 +11,7 @@ import pl.szyorz.storybook.entity.user.data.CreateUserRequest;
 import pl.szyorz.storybook.entity.user.data.UserResponse;
 import pl.szyorz.storybook.entity.user.data.UserWithoutRolesResponse;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,22 +27,11 @@ public class UserController {
                 .orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
-    @GetMapping("/api/user")
-    public ResponseEntity<UserResponse> currentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User) authentication.getPrincipal();
-
-        List<Role> userRoles = userService.getUserRoles(user.getId());
-        return ResponseEntity.ok(
-                new UserResponse(user.getId(),
-                        user.getUsername(),
-                        user.getEmail(),
-                        userRoles.stream().map(role -> new RoleResponse(
-                                role.getId(),
-                                role.getName(),
-                                role.getDescription(),
-                                role.getPrivileges()
-                        )).toList()));
+    @GetMapping("/api/currentuser")
+    public ResponseEntity<UserResponse> currentUser(Principal principal) {
+        return userService.getByUsername(principal.getName())
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
 //    @PutMapping("/api/user/roles")

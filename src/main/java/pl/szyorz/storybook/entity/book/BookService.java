@@ -3,12 +3,16 @@ package pl.szyorz.storybook.entity.book;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import pl.szyorz.storybook.entity.book.data.BookResponse;
 import pl.szyorz.storybook.entity.book.data.ChapterOrderUpdateRequest;
 import pl.szyorz.storybook.entity.book.data.CreateBookRequest;
 import pl.szyorz.storybook.entity.book.data.NewBookChapterRequest;
 import pl.szyorz.storybook.entity.chapter.Chapter;
 import pl.szyorz.storybook.entity.chapter.ChapterRepository;
+import pl.szyorz.storybook.entity.chapter.data.ShortChapterResponse;
 import pl.szyorz.storybook.entity.user.User;
+import pl.szyorz.storybook.entity.user.UserRepository;
+import pl.szyorz.storybook.entity.user.data.UserResponse;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,22 +23,31 @@ import java.util.UUID;
 public class BookService {
     private BookRepository bookRepository;
     private ChapterRepository chapterRepository;
+    private UserRepository userRepository;
 
-    public Optional<Book> createBook(CreateBookRequest req, User author) {
-        Book book = mapToBookEntity(req, author);
-        return Optional.of(bookRepository.save(book));
+    public Optional<BookResponse> createBook(CreateBookRequest req, String author) {
+        User user = userRepository.findByUsername(author)
+                .orElseThrow();
+        Book book = mapToBookEntity(req, user);
+        Book saved = bookRepository.save(book);
+        return Optional.of(mapToBookResponse(saved, user));
     }
 
-    public Optional<Book> getBookById(UUID bookId) {
-        return bookRepository.findById(bookId);
+    public Optional<BookResponse> getBookById(UUID bookId) {
+        return bookRepository.findById(bookId)
+                .map(book -> mapToBookResponse(book, book.getAuthor()));
     }
 
     public List<Book> getBooksByUserId(UUID userId) {
         return bookRepository.findAllByAuthorId(userId);
     }
 
+    public List<Book> getBooksByUsername(String username) {
+        return bookRepository.findAllByAuthorUsername(username);
+    }
+
     @Transactional
-    public void addNewChapter(NewBookChapterRequest bookChapterRequest) {
+    public Optional<Chapter> addNewChapter(NewBookChapterRequest bookChapterRequest) {
         Optional<Book> bookOptional = bookRepository.findById(bookChapterRequest.bookId());
         if (bookOptional.isEmpty()) {
             throw new IllegalStateException("No book of id: " + bookChapterRequest.bookId() +" was found!");
@@ -45,7 +58,13 @@ public class BookService {
         chapter.setPosition(book.getChapters().size() + 1);
         book.getChapters().add(chapter);
 
-        bookRepository.save(book);
+        Book updatedBook = bookRepository.save(book);
+
+        return updatedBook
+                .getChapters()
+                .stream()
+                .filter(c -> c.getPosition() == chapter.getPosition())
+                .findFirst();
     }
 
     @Transactional
@@ -86,5 +105,25 @@ public class BookService {
         book.setAuthor(author);
 
         return book;
+    }
+
+    private BookResponse mapToBookResponse(Book book, User author) {
+        return new BookResponse(
+                book.getId(),
+                book.getTitle(),
+                book.getDescription(),
+                new UserResponse(
+                        author.getId(),
+                        author.getUsername()
+                ),
+                book.getChapters().stream().map(
+                        chapter -> new ShortChapterResponse(
+                                chapter.getId(),
+                                chapter.getTitle(),
+                                chapter.getDescription(),
+                                chapter.getPosition()
+                        )
+                ).toList()
+        );
     }
 }
