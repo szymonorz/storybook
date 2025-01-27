@@ -58,27 +58,36 @@ public class UserService {
     /*
         Check if login request is valid.
      */
-    public Optional<UserResponse> verifyUser(LoginRequest req) {
-        Optional<User> userOptional = userRepository.findByEmail(req.email());
-        if (userOptional.isEmpty()) {
-            return Optional.empty();
-        }
-        User user = userOptional.get();
-        if(!passwordEncoder.matches(req.password(), user.getPassword())){
-            return Optional.empty();
-        }
-        UserResponse resp = convertDBUserToAPIUser(user);
-        return Optional.of(resp);
-    }
+//    public Optional<UserResponse> verifyUser(LoginRequest req) {
+//        Optional<User> userOptional = userRepository.findByEmail(req.email());
+//        if (userOptional.isEmpty()) {
+//            return Optional.empty();
+//        }
+//        User user = userOptional.get();
+//        if(!passwordEncoder.matches(req.password(), user.getPassword())){
+//            return Optional.empty();
+//        }
+//        UserResponse resp = convertDBUserToAPIUser(user);
+//        return Optional.of(resp);
+//    }
 
-    public Optional<UserResponse> getByUsername(String username) {
+    public Optional<DetailedUserResponse> getByUsername(String username) {
         return userRepository.findByUsername(username)
                 .map(this::convertDBUserToAPIUser);
     }
 
-    private UserResponse convertDBUserToAPIUser(User user) {
-        return new UserResponse(user.getId(),
-                                user.getUsername()
+    private DetailedUserResponse convertDBUserToAPIUser(User user) {
+        return new DetailedUserResponse(user.getId(),
+                                user.getUsername(),
+                                user.getEmail(),
+                                user.getUserRoles()
+                                        .stream()
+                                        .map(role ->  new RoleResponse(
+                                                role.getId(),
+                                                role.getName(),
+                                                role.getDescription(),
+                                                role.getPrivileges()
+                                        )).toList()
         );
     }
 

@@ -27,12 +27,12 @@ public class BookController {
         Return logged in user's books
      */
     @GetMapping("/api/currentuser/books")
-    public ResponseEntity<List<Book>> currentUserBooks(Principal principal) {
+    public ResponseEntity<List<BookResponse>> currentUserBooks(Principal principal) {
         return ResponseEntity.ok(bookService.getBooksByUsername(principal.getName()));
     }
 
     @GetMapping("/api/user/{userId}/books")
-    public ResponseEntity<List<Book>> userBooks(@PathVariable("userId") UUID userId) {
+    public ResponseEntity<List<BookResponse>> userBooks(@PathVariable("userId") UUID userId) {
         return ResponseEntity.ok(bookService.getBooksByUserId(userId));
     }
 

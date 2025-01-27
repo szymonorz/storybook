@@ -38,12 +38,14 @@ public class BookService {
                 .map(book -> mapToBookResponse(book, book.getAuthor()));
     }
 
-    public List<Book> getBooksByUserId(UUID userId) {
-        return bookRepository.findAllByAuthorId(userId);
+    public List<BookResponse> getBooksByUserId(UUID userId) {
+        return bookRepository.findAllByAuthorId(userId)
+                .stream().map(book -> mapToBookResponse(book, book.getAuthor())).toList();
     }
 
-    public List<Book> getBooksByUsername(String username) {
-        return bookRepository.findAllByAuthorUsername(username);
+    public List<BookResponse> getBooksByUsername(String username) {
+        return bookRepository.findAllByAuthorUsername(username)
+                .stream().map(book -> mapToBookResponse(book, book.getAuthor())).toList();
     }
 
     @Transactional

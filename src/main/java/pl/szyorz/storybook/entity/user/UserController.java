@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.szyorz.storybook.entity.role.Role;
 import pl.szyorz.storybook.entity.role.data.RoleResponse;
 import pl.szyorz.storybook.entity.user.data.CreateUserRequest;
+import pl.szyorz.storybook.entity.user.data.DetailedUserResponse;
 import pl.szyorz.storybook.entity.user.data.UserResponse;
 import pl.szyorz.storybook.entity.user.data.UserWithoutRolesResponse;
 
@@ -28,7 +29,7 @@ public class UserController {
     }
 
     @GetMapping("/api/currentuser")
-    public ResponseEntity<UserResponse> currentUser(Principal principal) {
+    public ResponseEntity<DetailedUserResponse> currentUser(Principal principal) {
         return userService.getByUsername(principal.getName())
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.badRequest().build());
