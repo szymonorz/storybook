@@ -53,6 +53,90 @@ button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
+.app {
+  display: flex;
+  flex-direction: column;
+}
+
+.page-header {
+  width: 100%;
+  height: 3em;
+  padding: 1em;
+  font-size: x-large;
+  color: black;
+  font-weight: bold;
+  background: #eee;
+  margin-bottom: 0.5em;
+}
+
+.page {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.main-page-segment {
+  background-color: #f9f9f9;
+  color: black;
+  width: 100%;
+  height: 60em;
+  overflow-y: auto;
+}
+
+
+.book-preview {
+  border-bottom: 1px solid #213547;
+  padding: 1.5em;
+}
+
+.book-preview-author {
+  color: #555
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  background-color: #eeeeee;
+  color: black;
+  padding: 2em;
+  border-radius: 0.3em;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  background-color: #eeeeee;
+  color: black;
+  padding: 2em;
+  border-radius: 0.3em;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  padding: 0.5em;
+}
+
+.form-input {
+  background-color: #aaa;
+  color: black;
+  border: 1px solid black;
+  padding: 0.5em;
+}
+
+.form-input:focus {
+  border: 1px solid white;
+}
+
+.clickable {
+  text-decoration-line: underline;
+  cursor: pointer
+}
 
 @media (prefers-color-scheme: light) {
   :root {
