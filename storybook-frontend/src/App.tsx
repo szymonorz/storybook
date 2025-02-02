@@ -1,3 +1,4 @@
+import { Outlet } from 'react-router'
 import './App.css'
 import PageHeader from './components/PageHeader'
 import HomePage from './pages/HomePage'
@@ -8,7 +9,7 @@ function App() {
     <>
       <div className='app'>
         <PageHeader/>
-        <HomePage/>
+        <Outlet/>
       </div>
     </>
   )
