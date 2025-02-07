@@ -7,11 +7,14 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "i18n": "formatjs extract 'src/**/*.{ts,tsx}' --ignore '**/*.d.ts' --out-file build/messages.json && formatjs compile build/messages.json --out-file src/locales/en.json"
   },
   "dependencies": {
+    "@formatjs/cli": "^6.6.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-intl": "^7.1.5",
     "react-router": "^7.1.5"
   },
   "devDependencies": {
