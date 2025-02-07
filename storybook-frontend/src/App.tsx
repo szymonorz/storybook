@@ -1,19 +1,16 @@
 import { Outlet } from 'react-router'
 import './App.css'
 import PageHeader from './components/PageHeader'
-import HomePage from './pages/HomePage'
-import { IntlProvider } from 'react-intl'
+
+import './utils/i18n'
 
 function App() {
-
   return (
     <>
-      <IntlProvider locale='en'>
         <div className='app'>
           <PageHeader/>
           <Outlet/>
         </div>
-      </IntlProvider>
     </>
   )
 }
