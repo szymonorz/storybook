@@ -11,25 +11,21 @@ interface CreateUserRequest {
     password: string
 }
 
-export async function registerUser(data: any) {
-    const userRequest: CreateUserRequest = {
-        email: data.email.value,
-        username: data.username.value,
-        password: data.password.value
-    }
-
+export async function registerUser(userRequest: CreateUserRequest) {
     console.log(userRequest)
 
     const response = await fetch(`${config.url}:${config.port}/api/user/register`, {
         method: "POST",
-        body: JSON.stringify(userRequest)
+        body: JSON.stringify(userRequest),
+        headers: new Headers({"Content-Type": "application/json"})
     })
 
-    if(!response.ok) {
-        return new Error("Failed to create user")
-    }
-
-    return await response.json()
+    // if(!response.ok) {
+    //     console.log("NOT OK")
+    //     return new Error("Failed to create user")
+    // }
+    console.log("xxx")
+    return response.json()
 }
 
 export async function loginUser(data: any) {

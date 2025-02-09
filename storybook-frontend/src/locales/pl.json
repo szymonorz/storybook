@@ -1,5 +1,6 @@
 {
   "register_form.confirm_password": "Potwierdź hasło",
+  "register_form.create_account": "Załóż konto",
   "register_form.email": "Email",
   "register_form.password": "Hasło",
   "register_form.username": "Nazwa użytkownika"

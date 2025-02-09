@@ -1,6 +1,10 @@
 {
   "register_form.confirm_password": "Confirm password",
+  "register_form.create_account": "Create an account",
   "register_form.email": "Email",
   "register_form.password": "Password",
-  "register_form.username": "Username"
+  "register_form.username": "Username",
+  "register_form.failed": "Failed to create  user",
+  "register_form.invalid_request": "Provided data is invalid. Make sure you filled out entire form correctly",
+  "register_form.in_use": "Either email or username is already in use"
 }
