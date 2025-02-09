@@ -7,6 +7,7 @@ import pl.szyorz.storybook.entity.role.Role;
 import pl.szyorz.storybook.entity.role.RoleService;
 import pl.szyorz.storybook.entity.role.data.RoleResponse;
 import pl.szyorz.storybook.entity.user.data.*;
+import pl.szyorz.storybook.entity.user.exception.AlreadyExistsException;
 
 import java.util.*;
 
@@ -19,11 +20,11 @@ public class UserService {
 
     public Optional<User> createNewUser(CreateUserRequest req) {
         if(userRepository.existsByEmail(req.email())) {
-            throw new IllegalArgumentException("Account with this email already exists");
+            throw new AlreadyExistsException("Account with this email already exists");
         }
 
         if(userRepository.existsByUsername(req.username())) {
-            throw new IllegalArgumentException("Account with this username already exists");
+            throw new AlreadyExistsException("Account with this username already exists");
         }
 
         User user = new User();

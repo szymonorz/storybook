@@ -40,6 +40,7 @@ public class AuthorizationFilter extends OncePerRequestFilter {
                 new AntPathRequestMatcher( "/swagger-ui/**", "GET"),
                 new AntPathRequestMatcher( "/v3/api-docs/**", "GET"),
                 new AntPathRequestMatcher("/auth/**", "POST" ),
+                new AntPathRequestMatcher("/api/user/register", "POST"),
                 new AntPathRequestMatcher("/api/user/**", "GET"),
                 new AntPathRequestMatcher("/api/book/**", "GET")
             );
