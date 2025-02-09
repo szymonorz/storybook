@@ -28,6 +28,7 @@ export default function RegisterForm() {
     }, [success, error])
 
     function onSubmit(data: RegisterFormValues) {
+            console.log("????")
             registerUser({
                 username: data.username,
                 email: data.email,
@@ -72,8 +73,9 @@ export default function RegisterForm() {
                         message: t("register_form.field_required")
                     }
                 })}/>
+                <span className="form-validation-error">{errors.username?.message}</span>
             </label>
-            <span>{errors.username?.message}</span>
+            
             <label className="form-field">
                 <span className="form-text"> {t("register_form.email")} </span>
                 <input className="form-input" id="email" type="email" {...register("email", {
@@ -82,8 +84,9 @@ export default function RegisterForm() {
                         message: t("register_form.field_required")
                     }
                 })}/>
+                <span className="form-validation-error">{errors.email?.message}</span>
             </label>
-            <span>{errors.email?.message}</span>
+            
             <label className="form-field">
                 <span className="form-text"> {t("register_form.password")} </span>
                 <input className="form-input" id="password" type="password" {...register("password",{
@@ -97,16 +100,18 @@ export default function RegisterForm() {
                             message: t("register_form.password_criteria_not_met")
                         }
                 })}/>
+                <span className="form-validation-error">{errors.password?.message}</span>
+                <div>{t("register_form.password_criteria")}</div>
+                <ul>
+                    <li>{t("register_form.password_length")}</li>
+                    <li>{t("register_form.capital_letter")}</li>
+                    <li>{t("register_form.small_letter")}</li>
+                    <li>{t("register_form.number")}</li>
+                    <li>{t("register_form.symbol")}</li>
+                </ul>
             </label>
-            <div>{t("register_form.password_criteria")}</div>
-            <ul>
-                <li>{t("register_form.password_length")}</li>
-                <li>{t("register_form.capital_letter")}</li>
-                <li>{t("register_form.small_letter")}</li>
-                <li>{t("register_form.number")}</li>
-                <li>{t("register_form.symbol")}</li>
-            </ul>
-            <span>{errors.password?.message}</span>
+
+            
             <label className="form-field">
                 <span className="form-text"> {t("register_form.confirm_password")} </span>
                 <input className="form-input" type="password" {...register("confirm_password", {
@@ -120,7 +125,7 @@ export default function RegisterForm() {
                         }
                     }
                 })}/>
-                <span>{errors.confirm_password?.message}</span>
+                <span className="form-validation-error">{errors.confirm_password?.message}</span>
             </label>
             <input type="submit" value="Register" />
         </form>
