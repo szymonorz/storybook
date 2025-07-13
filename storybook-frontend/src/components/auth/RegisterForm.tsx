@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { CreateUserRequest, registerUser } from "../utils/user";
+import { registerUser } from "../../utils/api/user";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 

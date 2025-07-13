@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import BookResponse, { getTopBooks } from "../utils/book"
+import BookResponse, { getTopBooks } from "../../utils/api/book"
 import BookPreview from "./BookPreview"
 
 export default function TopBooksSegment() {
@@ -11,7 +11,7 @@ export default function TopBooksSegment() {
     }, [])
     
     return (
-        <div className="main-page-segment">
+        <div className="top-books-segment">
             {books.map(book => <BookPreview key={book.id} book={book}/>)}
         </div>
     )

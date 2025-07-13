@@ -6,5 +6,13 @@
   "register_form.username": "Username",
   "register_form.failed": "Failed to create  user",
   "register_form.invalid_request": "Provided data is invalid. Make sure you filled out entire form correctly",
-  "register_form.in_use": "Either email or username is already in use"
+  "register_form.in_use": "Either email or username is already in use",
+  "login_form.email": "Email",
+  "login_form.password": "Password",
+  "login_form.no_account": "Not registered yet?",
+  "login_form.register_today": "Do it now!",
+  "user-nav.my-books": "My books",
+  "user-nav.create-book": "New book",
+  "user-nav.favourites": "Favourites",
+  "user-nav.settings": "Settings"
 }

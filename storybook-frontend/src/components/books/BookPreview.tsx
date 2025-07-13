@@ -1,4 +1,4 @@
-import BookResponse from "../utils/book";
+import BookResponse from "../../utils/api/book";
 
 interface BookPreviewProps {
     book: BookResponse
