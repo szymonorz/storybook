@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import pl.szyorz.storybook.entity.role.Role;
 import pl.szyorz.storybook.entity.role.RoleRepository;
+import pl.szyorz.storybook.entity.user.exception.DoesntExistException;
 
 import java.util.Collection;
 import java.util.List;
@@ -23,7 +24,7 @@ public class DetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> userOptional = userRepository.findByUsername(username);
         if (userOptional.isEmpty()) {
-            throw new IllegalArgumentException("User not found");
+            throw new DoesntExistException("User not found");
         }
         User user = userOptional.get();
         List<Role> roles = roleRepository.findAllByUsersId(user.getId());
