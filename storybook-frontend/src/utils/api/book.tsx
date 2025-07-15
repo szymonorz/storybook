@@ -17,7 +17,8 @@ interface CreateBookRequest {
     keywords: string[]
 }
 
-export async function createBook(token: string, req: CreateBookRequest) {
+export async function createBook(req: CreateBookRequest): Promise<BookResponse> {
+    const token = localStorage.getItem("_auth_token")
     const response = await fetch(`${config.url}/api/book`, {
         method: "POST",
         body: JSON.stringify(req),
@@ -27,7 +28,8 @@ export async function createBook(token: string, req: CreateBookRequest) {
     return response.json()
 }
 
-export async function getCurrentUserBooks(token: string) {
+export async function getCurrentUserBooks() {
+    const token = localStorage.getItem("_auth_token")
     const response = await fetch(`${config.url}/api/currentuser/books`, {
         method: "GET",
         headers: new Headers({"Authorization": `Bearer ${token}`, "Content-Type": "application/json"})
@@ -35,6 +37,17 @@ export async function getCurrentUserBooks(token: string) {
 
     return response.json()
 }
+
+export async function getBookInfo(bookId: string): Promise<BookResponse> {
+    const token = localStorage.getItem("_auth_token")
+    const response = await fetch(`${config.url}/api/book/${bookId}`, {
+        method: "GET",
+        headers: token ? new Headers({"Authorization": `Bearer ${token}`}): new Headers()
+    })
+
+    return response.json()
+}
+
 
 export function getTopBooks(): BookResponse[] {
     //TODO: axios api call

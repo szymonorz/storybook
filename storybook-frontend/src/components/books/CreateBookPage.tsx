@@ -1,8 +1,8 @@
-import { useContext, useState, useEffect, useLayoutEffect } from "react"
-import { AuthContext } from "../auth/AuthProvider"
-import { useNavigate } from "react-router"
 import { useForm } from "react-hook-form"
 import { createBook } from "../../utils/api/book"
+import { useTranslation } from "react-i18next"
+import { useNavigate } from "react-router"
+
 
 interface CreateBookFormValues {
     title: string,
@@ -12,37 +12,30 @@ interface CreateBookFormValues {
 }
 
 export default function CreateBookPage() {
-    const {auth} = useContext(AuthContext)
     const {register, handleSubmit} = useForm<CreateBookFormValues>()
+    const {t} = useTranslation()
     const navigate = useNavigate()
-    const [userNotFoundErr, setUserNotFoundErr] = useState<Boolean>(false)
-    useEffect(() => {
-        // if(auth == null) return 
-        if(auth){
-            setUserNotFoundErr(false)
-        } else {
-            setUserNotFoundErr(true)
-            console.log("why ma i here")
-            console.log(auth)
-            navigate("/notLoggedIn")
-        }
-    }, [auth])
 
     function onSubmit(data: CreateBookFormValues) {
         data.tags = []
         data.keywords = []
         console.log(data)
-        createBook(auth, data)
+        createBook(data)
+            .then((resp) => {
+                navigate(`/book/${resp.id}`)
+            })
     }
 
     return (
         <div className="page">
             <div className="main-component">
-                <form className="create-book-form" onSubmit={handleSubmit(onSubmit)}>
+                <form className="create-form book-form" onSubmit={handleSubmit(onSubmit)}>
+                    <label>{t("create-book.title")}</label>
                     <input type="text" {...register("title")}/>
+                    <label>{t("create-book.description")}</label>
                     <textarea className="textarea" {...register("description")}/>
 
-                    <button type="submit" value={"Submit"}/>
+                    <button type="submit">{t("create-book.submit")}</button>
                 </form>
             </div>
         </div>

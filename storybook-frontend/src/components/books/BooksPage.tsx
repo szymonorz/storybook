@@ -12,28 +12,26 @@ export default function BooksPage() {
     const [books, setBooks] = useState<BookResponse[]>([])
 
     useEffect(() => {
-        if(auth == null) return 
         const userId = searchParams.get("userId")
         if(userId) {
             setUserNotFoundErr(false)
-        } else if(auth){
+        } else {
             setUserNotFoundErr(false)
-            getCurrentUserBooks(auth)
+            getCurrentUserBooks()
                 .then((data) => {
                     console.log(data)
                     setBooks(data)
                 })
                 .catch((err) => console.log(err))
 
-        } else {
-            setUserNotFoundErr(true)
-            navigate("/notLoggedIn")
         }
     }, [auth, searchParams])
 
     return (
         <div className="page">
-            {books.map((book) => <BookPreview key={book.id} book={book}/>)}
+            <div className="main-component">
+                {books.map((book) => <BookPreview key={book.id} book={book}/>)}
+            </div>
         </div>
     )
 }
