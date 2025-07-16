@@ -2,7 +2,7 @@ import { useEffect, useState, useContext } from "react"
 import { useNavigate, useParams } from "react-router"
 import { AuthContext } from "../auth/AuthProvider"
 import { useTranslation } from "react-i18next"
-import BookResponse, { getBookInfo, getBookInfoUnauth } from "../../utils/api/book"
+import BookResponse, { getBookInfo } from "../../utils/api/book"
 import ChapterPreview from "../chapter/ChapterPreview"
 
 interface BookProps {
@@ -34,12 +34,16 @@ export default function BookPage() {
             {bookId == null ? 
                 (<div>Book not found</div>) 
                 : 
-                (<div>
+                (<div className="book">
                     <h1>{bookState?.title}</h1>
                     <h3>{t("book.author")}: {bookState?.author.username}</h3>
                     <p>{bookState?.description}</p>
-                    {bookState?.chapters.map((chapter) => (<ChapterPreview chapter={chapter}/>) )}
+                    <div className="book-chapter-list">
+                        <h5>{t("book.chapters")}:</h5>
+                        {bookState?.chapters.map((chapter) => (<ChapterPreview key={chapter.id} chapter={chapter}/>) )}                    
+                    </div>
                     <button onClick={() => navigate(`/book/${bookId}/createChapter`)}>{t("book.new_chapter")}</button>
+
                 
                 </div>)}
         </div>

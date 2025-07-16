@@ -55,6 +55,7 @@ button:focus-visible {
 .app {
   display: flex;
   flex-direction: column;
+  height: 100%;
 }
 
 .page-header {
@@ -92,7 +93,7 @@ button:focus-visible {
   padding: 2em;
   border-radius: 0.3em;
   width: 80%;
-  height: 60vh;
+  height: 90%;
 }
 
 .top-books-segment {
@@ -135,7 +136,7 @@ button:focus-visible {
   padding: 2em;
   border-radius: 0.3em;
   width: 90%;
-  height: 60vh;
+  height: 90%;
 }
 
 .book-form input {
@@ -153,7 +154,7 @@ button:focus-visible {
   vertical-align: top;
   padding: 1em;
   line-height: 1.4;
-  font-size: 16px;
+  font-size: 18px;
   color: white;
   background-color: #333;
   border: none;
@@ -165,7 +166,17 @@ button:focus-visible {
 }
 
 .chapter-form {
-  
+  font-size: 18px;
+}
+
+.chapter-form input[type="text"],textarea {
+  margin-bottom: 1em;
+  font-size: 20px;
+}
+
+.chapter-form .chapter-content {
+  height: 100%;
+ 
 }
 
 .chapter-form input {
@@ -175,7 +186,7 @@ button:focus-visible {
   font-size: 16px;
 }
 
-.chapter-form .authors-note {
+.chapter-form .authors-note, .description {
   height: 5vh;
 }
 
@@ -235,6 +246,45 @@ button:focus-visible {
 .clickable {
   text-decoration-line: underline;
   cursor: pointer
+}
+
+.book {
+  width: 100%
+}
+
+.book h1 {
+  text-align: center;
+}
+
+.book h3 {
+  text-align: center;
+}
+
+.book-chapter-list {
+  align-items: center;
+  font-size: 20px;
+}
+
+.chapter-preview {
+  display: flex;
+  flex-direction: row;
+  padding-bottom: 1em;
+  margin-bottom: 1em;
+  border-bottom: 1px solid black;
+}
+
+.chapter-preview .chapter-preview-title {
+  margin-right: 1em;
+  padding-right: 1em;
+  border-right: 1px solid black;
+}
+
+.chapter-preview .chapter-preview-description {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;     
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  max-width: 50ch;        
 }
 
 @media (prefers-color-scheme: light) {

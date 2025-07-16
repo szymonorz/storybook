@@ -11,6 +11,7 @@ import SettingsPage from './pages/SettingsPage.tsx'
 import NotLoggedIn from './components/auth/NotLoggedIn.tsx'
 import BookPage from './components/books/BookPage.tsx'
 import CreateChapterPage from './components/chapter/CreateChapterPage.tsx'
+import ChapterPage from './components/chapter/ChapterPage.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <BrowserRouter>
@@ -23,6 +24,7 @@ createRoot(document.getElementById('root')!).render(
         <Route path='book'>
           <Route path=':bookId' element={<BookPage/>}/>
           <Route path=':bookId/createChapter' element={<CreateChapterPage/>}/>
+          <Route path=':bookId/chapter/:chapterNumber' element={<ChapterPage/>}/>
         </Route>
         <Route path="createBook" element={<CreateBookPage/>}/>
         <Route path="favourites" element={<FavouritesPage/>}/>
