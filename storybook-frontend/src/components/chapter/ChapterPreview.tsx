@@ -17,6 +17,6 @@ export default function ChapterPreview({chapter}: ChapterPreviewProps) {
 
     return <div className="chapter-preview" onClick={()=>handleOnClick()}>
             <div className="chapter-preview-title">{t("book.chapter")} {chapter.position}: {chapter.title}</div>
-            <div className="chapter-preview-description">{chapter.description}</div>
+            {chapter.description.length != 0 ? <div className="chapter-preview-description">{t("book.chapter-description")}: {chapter.description}</div>: <div></div>}
         </div>
 }

@@ -9,8 +9,6 @@ export default function UserNav() {
             <ul>
                 <li className="clickable" onClick={() => navigate("/books")}>{t("user-nav.my-books")}</li>
                 <li className="clickable" onClick={() => navigate("/createBook")}>{t("user-nav.create-book")}</li>
-                <li className="clickable" onClick={() => navigate("/favourites")}>{t("user-nav.favourites")}</li>
-                <li className="clickable" onClick={() => navigate("/settings")}>{t("user-nav.settings")}</li>
             </ul>
         </div>
     )

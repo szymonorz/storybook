@@ -1,8 +1,6 @@
 import { useContext, useState, useEffect, useLayoutEffect } from "react"
-import { AuthContext } from "../auth/AuthProvider"
 import { useNavigate, useParams } from "react-router"
 import { useForm } from "react-hook-form"
-import { createBook } from "../../utils/api/book"
 import { createChapter, NewBookChapterRequest } from "../../utils/api/chapter"
 import { useTranslation } from "react-i18next"
 
@@ -13,17 +11,12 @@ interface CreateChapterFormValues {
     chapterContent: string
 }
 
-export default function CreateChapterPage() {
+export default function CreateOrEditChapterPage() {
 
     const {register, handleSubmit} = useForm<CreateChapterFormValues>()
     const navigate = useNavigate()
     const {t} = useTranslation()
-    const [userNotFoundErr, setUserNotFoundErr] = useState<Boolean>(false)
     const {bookId} = useParams()
-
-    useEffect(() => {
-        console.log(bookId)
-    }, [bookId])
 
     function onSubmit(data: CreateChapterFormValues) {
     

@@ -2,7 +2,16 @@ import { useLayoutEffect, useState } from "react";
 import { createContext } from 'react'
 import { getCurrentUser } from "../../utils/api/user";
 
-export const AuthContext = createContext({})
+export interface Auth {
+    auth: string | null,
+    setAuth: (c: string) => void
+}
+
+export const AuthContext = createContext<Auth>({
+    auth: null,
+     setAuth: () => {}
+})
+
 export default function AuthProvider({children}) {
     const [auth, setAuth] = useState<string| null>(null)
 

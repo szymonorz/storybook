@@ -1,19 +1,12 @@
-import { useEffect, useState, useContext } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router"
-import { AuthContext } from "../auth/AuthProvider"
 import { useTranslation } from "react-i18next"
 import BookResponse, { getBookInfo } from "../../utils/api/book"
 import ChapterPreview from "../chapter/ChapterPreview"
 
-interface BookProps {
-    bookId: string
-}
-
 export default function BookPage() {
 
-    const {auth} = useContext(AuthContext)
     const navigate = useNavigate()
-    const [userNotFoundErr, setUserNotFoundErr] = useState<Boolean>(false)
     const {t} = useTranslation()
 
     const {bookId} = useParams()
@@ -26,17 +19,19 @@ export default function BookPage() {
 
         getBookInfo(bookId)
                 .then((data) => setBookState(data))
+                .catch((error) => setError(error))
 
     }, [bookId])
 
     return <div className="page">
         <div className="main-component">
-            {bookId == null ? 
+            {bookId == null || error ? 
                 (<div>Book not found</div>) 
                 : 
                 (<div className="book">
                     <h1>{bookState?.title}</h1>
                     <h3>{t("book.author")}: {bookState?.author.username}</h3>
+                    <label>{t("book.description")}</label>
                     <p>{bookState?.description}</p>
                     <div className="book-chapter-list">
                         <h5>{t("book.chapters")}:</h5>

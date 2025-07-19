@@ -1,14 +1,14 @@
-import { useContext, useEffect, useState } from "react"
-import { AuthContext } from "../auth/AuthProvider"
-import { useLocation, useNavigate, useSearchParams } from "react-router"
+import { useEffect, useState } from "react"
+import { useNavigate, useSearchParams } from "react-router"
 import BookResponse, { getCurrentUserBooks } from "../../utils/api/book"
 import BookPreview from "./BookPreview"
+import { useTranslation } from "react-i18next"
 
 export default function BooksPage() {
-    const { auth } = useContext(AuthContext)
-    const [searchParams, setSearchParams] = useSearchParams()
+    const [searchParams] = useSearchParams()
     const navigate = useNavigate()
     const [userNotFoundErr, setUserNotFoundErr] = useState<Boolean>(false)
+    const {t} = useTranslation()
     const [books, setBooks] = useState<BookResponse[]>([])
 
     useEffect(() => {
@@ -25,12 +25,21 @@ export default function BooksPage() {
                 .catch((err) => console.log(err))
 
         }
-    }, [auth, searchParams])
+    }, [searchParams])
 
     return (
         <div className="page">
             <div className="main-component">
-                {books.map((book) => <BookPreview key={book.id} book={book}/>)}
+                { userNotFoundErr ? 
+                    <>{t("books.user-not-found")}</> 
+                        :
+                    ( 
+                        <>
+                            {books.map((book) => <BookPreview key={book.id} book={book}/>)}
+                            <button onClick={() => navigate("/createBook")}>{t("books.create-book")}</button>
+                        </>
+                    )
+                }
             </div>
         </div>
     )
