@@ -5,7 +5,7 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  background-color: #21015e;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -32,6 +32,17 @@ body {
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
+}
+
+textarea {
+  background-color: #aeaeae;
+  color: black;
+}
+
+input[type="text"] {
+  background-color: #aeaeae;
+
+  color: black;
 }
 
 button {
@@ -155,10 +166,15 @@ button:focus-visible {
   padding: 1em;
   line-height: 1.4;
   font-size: 18px;
-  color: white;
-  background-color: #333;
   border: none;
   resize: none;
+}
+
+.book-form input {
+  width: 60%;
+  height: 3vh;
+  margin-bottom: 1em;
+  font-size: 16px;
 }
 
 .book-form button[type="submit"] {
@@ -191,11 +207,19 @@ button:focus-visible {
 }
 
 .chapter-form input::placeholder {
-  color: #aeaeae;
+  color: #1e1e1e;
 }
 
 .authors-note::placeholder {
-  color: #aeaeae
+  color: #1e1e1e;
+}
+
+.description::placeholder {
+  color: #1e1e1e;
+}
+
+.chapter-content::placeholder {
+  color: #1e1e1e;
 }
 
 .register-form .form-input {

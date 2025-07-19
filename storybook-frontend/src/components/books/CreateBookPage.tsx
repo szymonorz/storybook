@@ -31,9 +31,9 @@ export default function CreateBookPage() {
             <div className="main-component">
                 <form className="create-form book-form" onSubmit={handleSubmit(onSubmit)}>
                     <label>{t("create-book.title")}</label>
-                    <input type="text" {...register("title")}/>
+                    <input className="title" type="text" {...register("title")}/>
                     <label>{t("create-book.description")}</label>
-                    <textarea className="textarea" {...register("description")}/>
+                    <textarea className="description" {...register("description")}/>
 
                     <button type="submit">{t("create-book.submit")}</button>
                 </form>
