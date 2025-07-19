@@ -1,17 +1,13 @@
 package pl.szyorz.storybook.entity.book;
 
 import lombok.AllArgsConstructor;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import pl.szyorz.storybook.entity.book.data.BookResponse;
 import pl.szyorz.storybook.entity.book.data.CreateBookRequest;
 import pl.szyorz.storybook.entity.book.data.NewBookChapterRequest;
-import pl.szyorz.storybook.entity.chapter.data.ChapterContentResponse;
 import pl.szyorz.storybook.entity.chapter.data.ShortChapterResponse;
-import pl.szyorz.storybook.entity.user.User;
 
 import java.security.Principal;
 import java.util.List;
@@ -64,5 +60,10 @@ public class BookController {
         return bookOptional
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.badRequest().build());
+    }
+
+    @GetMapping("/api/book/latest")
+    public ResponseEntity<List<BookResponse>> latest(Principal principal, @DefaultValue("10") @RequestParam("n") int n) {
+        return ResponseEntity.ok(bookService.latest(n));
     }
 }

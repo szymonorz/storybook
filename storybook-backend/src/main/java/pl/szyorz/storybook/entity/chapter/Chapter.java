@@ -42,7 +42,9 @@ public class Chapter {
     private String authorNote;
     private String content;
 
+    @Column(columnDefinition = "DATETIME DEFAULT NOW()")
     private LocalDateTime createdAt;
+    @Column(columnDefinition = "DATETIME DEFAULT NOW()")
     private LocalDateTime updatedAt;
 
 //    @OneToOne(fetch = FetchType.LAZY)

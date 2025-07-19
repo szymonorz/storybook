@@ -14,6 +14,7 @@ import pl.szyorz.storybook.entity.user.User;
 import pl.szyorz.storybook.entity.user.UserRepository;
 import pl.szyorz.storybook.entity.user.data.UserResponse;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -29,6 +30,8 @@ public class BookService {
         User user = userRepository.findByUsername(author)
                 .orElseThrow();
         Book book = mapToBookEntity(req, user);
+        book.setCreatedAt(LocalDateTime.now());
+        book.setUpdatedAt(LocalDateTime.now());
         Book saved = bookRepository.save(book);
         return Optional.of(mapToBookResponse(saved, user));
     }
@@ -59,6 +62,7 @@ public class BookService {
         chapter.setBook(book);
         chapter.setPosition(book.getChapters().size() + 1);
         book.getChapters().add(chapter);
+        book.setUpdatedAt(LocalDateTime.now());
 
         Book updatedBook = bookRepository.save(book);
 
@@ -88,6 +92,11 @@ public class BookService {
             book.getChapters().get(i).setPosition(i + 1);
 
         bookRepository.save(book);
+    }
+
+    public List<BookResponse> latest(int n) {
+        return bookRepository.latest(n)
+                .stream().map(book -> mapToBookResponse(book, book.getAuthor())).toList();
     }
 
     /* Map the record class to entity class */

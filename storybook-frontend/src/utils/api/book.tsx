@@ -48,6 +48,15 @@ export async function getBookInfo(bookId: string): Promise<BookResponse> {
     return response.json()
 }
 
+export async function getLatestBooks(): Promise<BookResponse[]> {
+    const token = localStorage.getItem("_auth_token")
+    const response = await fetch(`${config.url}/api/book/latest?n=10`, {
+        method: "GET",
+        headers: token ? new Headers({"Authorization": `Bearer ${token}`}): new Headers()
+    })
+
+    return response.json()
+}
 
 export function getTopBooks(): BookResponse[] {
     //TODO: axios api call

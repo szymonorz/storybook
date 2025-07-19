@@ -28,8 +28,8 @@ export default function ChapterSlider({bookId, chapterNumber}: ChapterSliderProp
 
     return (
         <div className="chapter-slider">
-            {chapterNumber != chapterCount ? <div onClick={nextChapter}>{t("chapter.next")}</div>: <div></div>}
-            {chapterNumber != 1 ? <div onClick={previousChapter}>{t("chapter.previous")}</div>: <div></div>}
+            {chapterNumber != chapterCount ? <div className="clickable" onClick={nextChapter}>{t("chapter.next")}</div>: <div></div>}
+            {chapterNumber != 1 ? <div className="clickable" onClick={previousChapter}>{t("chapter.previous")}</div>: <div></div>}
         </div>
     )
 }

@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react"
-import BookResponse, { getTopBooks } from "../../utils/api/book"
+import BookResponse, { getLatestBooks } from "../../utils/api/book"
 import BookPreview from "./BookPreview"
 
 export default function TopBooksSegment() {
     const [books, setBooks] = useState<BookResponse[]>([])
 
     useEffect(() => {
-        let _books = getTopBooks()
-        setBooks(_books)
+        getLatestBooks()
+            .then((data) => setBooks(data))
     }, [])
     
     return (
