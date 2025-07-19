@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router"
 import { ChapterContentResponse, getChapter } from "../../utils/api/chapter"
 import { useTranslation } from "react-i18next"
+import ChapterSlider from "./ChapterSlider"
 
 export default function ChapterPage() {
     
@@ -23,21 +24,26 @@ export default function ChapterPage() {
             .then((data) => setChapter(data))
             .catch((error) => setError(error))
             
-    }, [])
+    }, [bookId, chapterNumber])
+
+    function chapterList() {
+        navigate(`/book/${bookId}`)
+    }
 
     return (
         <div className="page">
             <div className="main-component">
-            {/* {error ?? (<div>{error}</div>)} */}
             {error  ? 
                 (<div>Chapter not found</div>) 
                 : 
-                (<div className="book">
+                (<div className="chapter">
+                    <div className="chapter-list" onClick={() => chapterList()}>{t("chapter.back")}</div>
+                    <ChapterSlider bookId={bookId} chapterNumber={Number(chapterNumber)}/>
                     <h1>{t("chapter-page.chapter")} {chapterNumber}: {chapter?.title}</h1>
-                    <h3>{t("book.author")}: {chapter?.authorsNote}</h3>
-                    <p>{chapter?.description}</p>
-                    <pre>{chapter?.content}</pre>
-                    {/* <button onClick={() => navigate(`/book/${bookId}/createChapter`)}>{t("book.new_chapter")}</button> */}
+                    <h3>{t("chapter.authors-note")}: {chapter?.authorsNote}</h3>
+                    <div className="description">{chapter?.description}</div>
+                    <pre className="content">{chapter?.content}</pre>
+                    <ChapterSlider bookId={bookId} chapterNumber={Number(chapterNumber)}/>
                 </div>)}
             </div>
         </div>

@@ -36,7 +36,7 @@ export default function CreateChapterPage() {
         // console.log(reqData)
         createChapter(reqData)
             .then((data) => {
-                navigate(`/book/${bookId}/chapter/${data.id}`)
+                navigate(`/book/${bookId}/chapter/${data.position}`)
             })
     }
 

@@ -36,9 +36,9 @@ export async function createChapter(request: NewBookChapterRequest): Promise<Sho
     return response.json()
 }
 
-export async function getChapter(bookId: string, chapterId: string): Promise<ChapterContentResponse> {
+export async function getChapter(bookId: string, chapterNumber: string): Promise<ChapterContentResponse> {
     const token = localStorage.getItem('_auth_token')
-    const response = await fetch(`${config.url}/api/book/${bookId}/chapter/${chapterId}`, {
+    const response = await fetch(`${config.url}/api/book/${bookId}/chapter/${chapterNumber}`, {
         method: "GET",
         headers: new Headers({"Authorization": `Bearer ${token}`})
     })
