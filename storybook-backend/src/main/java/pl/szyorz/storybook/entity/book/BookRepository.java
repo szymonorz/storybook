@@ -24,4 +24,25 @@ public interface BookRepository extends CrudRepository<Book, UUID> {
             """
     )
     List<Book> latest(@Param("n") int n);
+
+    @Query("""
+            SELECT DISTINCT b FROM Book b\s
+            JOIN Chapter c ON c.book = b\s
+            JOIN User a ON b.author = a\s
+            WHERE\s
+            a.username LIKE :lookup\s
+            OR\s
+            b.title LIKE :lookup\s
+            OR\s
+            b.description LIKE :lookup\s
+            OR\s
+            c.title LIKE :lookup\s
+            OR\s
+            c.description LIKE :lookup\s
+            OR\s
+            c.content LIKE :lookup\s
+            ORDER BY b.createdAt
+            LIMIT :n\s
+            """)
+    List<Book> search(@Param("lookup") String lookup, @Param("n") int n);
 }

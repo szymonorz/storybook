@@ -63,7 +63,14 @@ public class BookController {
     }
 
     @GetMapping("/api/book/latest")
-    public ResponseEntity<List<BookResponse>> latest(Principal principal, @DefaultValue("10") @RequestParam("n") int n) {
+    public ResponseEntity<List<BookResponse>> latest(Principal principal, @RequestParam(value = "n", defaultValue = "10", required = false) int n) {
         return ResponseEntity.ok(bookService.latest(n));
+    }
+
+    @GetMapping("/api/book/search")
+    public ResponseEntity<List<BookResponse>> search(Principal principal,
+                                                     @RequestParam(value = "q") String lookup,
+                                                     @RequestParam(value = "n", defaultValue = "10", required = false) int n) {
+        return ResponseEntity.ok(bookService.search(lookup, n));
     }
 }

@@ -99,6 +99,12 @@ public class BookService {
                 .stream().map(book -> mapToBookResponse(book, book.getAuthor())).toList();
     }
 
+    public List<BookResponse> search(String lookup, int n) {
+        String wildcardLookup = '%' + lookup + '%';
+        return bookRepository.search(wildcardLookup, n)
+                .stream().map(book -> mapToBookResponse(book, book.getAuthor())).toList();
+    }
+
     /* Map the record class to entity class */
     private Chapter mapToChapterEntity(NewBookChapterRequest dto) {
         return new Chapter(
