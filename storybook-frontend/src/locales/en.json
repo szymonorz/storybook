@@ -33,5 +33,6 @@
   "chapter.previous": "Previous",
   "chapter.next": "Next",
   "chapter-page.chapter": "Chapter",
-  "chapter-page.description": "Description"
+  "chapter-page.description": "Description",
+  "search-page.results": "Search results for"
 }

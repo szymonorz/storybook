@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react"
 import { useNavigate, useSearchParams } from "react-router"
 import BookResponse, { getCurrentUserBooks } from "../../utils/api/book"
-import BookPreview from "./BookPreview"
 import { useTranslation } from "react-i18next"
+import BookList from "./BookList"
 
-export default function BooksPage() {
+export default function AuthorBooksPage() {
     const [searchParams] = useSearchParams()
     const navigate = useNavigate()
     const [userNotFoundErr, setUserNotFoundErr] = useState<Boolean>(false)
@@ -35,7 +35,7 @@ export default function BooksPage() {
                         :
                     ( 
                         <>
-                            {books.map((book) => <BookPreview key={book.id} book={book}/>)}
+                            <BookList books={books}/>
                             <button onClick={() => navigate("/createBook")}>{t("books.create-book")}</button>
                         </>
                     )

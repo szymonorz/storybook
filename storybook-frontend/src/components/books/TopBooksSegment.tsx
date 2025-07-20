@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import BookResponse, { getLatestBooks } from "../../utils/api/book"
 import BookPreview from "./BookPreview"
+import BookList from "./BookList"
 
 export default function TopBooksSegment() {
     const [books, setBooks] = useState<BookResponse[]>([])
@@ -12,7 +13,7 @@ export default function TopBooksSegment() {
     
     return (
         <div className="top-books-segment">
-            {books.map(book => <BookPreview key={book.id} book={book}/>)}
+            <BookList books={books}/>
         </div>
     )
 }
