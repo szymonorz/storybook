@@ -12,46 +12,54 @@ interface CreateUserRequest {
 }
 
 interface LoginRequest {
-    email: string,
+    username: string,
     password: string
 }
 
-export async function registerUser(userRequest: CreateUserRequest) {
-    console.log(userRequest)
+interface TokenResponse {
+    access_token: string,
+    refresh_token: string
+}
 
+export async function registerUser(userRequest: CreateUserRequest) {
     const response = await fetch(`${config.url}/api/user/register`, {
         method: "POST",
         body: JSON.stringify(userRequest),
         headers: new Headers({"Content-Type": "application/json"})
     })
 
-    // if(!response.ok) {
-    //     console.log("NOT OK")
-    //     return new Error("Failed to create user")
-    // }
-    console.log("xxx")
     return response.json()
 }
 
-export async function loginUser(loginRequest: LoginRequest) {
-    console.log(loginRequest)
-
+export async function loginUser(loginRequest: LoginRequest): Promise<TokenResponse> {
     const response = await fetch(`${config.url}/auth`, {
         method: "POST",
         body: JSON.stringify(loginRequest)
     })
 
     if(!response.ok) {
-        return new Error("Failed to log in")
+        throw new Error("Failed to log in")
     }
 
-    const token_pair = await response.json()
-    console.log(token_pair)
-
-    localStorage.setItem("_auth_token", token_pair.access_token)
+    return response.json()
 }
 
-export async function getCurrentUser(token: string) {
+export async function getUser(userId: string): Promise<UserResponse> {
+    const token = localStorage.getItem('_auth_token')
+    const response = await fetch(`${config.url}/api/user/${userId}`, {
+        method: "GET",
+        headers: new Headers({"Authorization": `Bearer ${token}`, "Content-Type": "application/json"})
+    })
+
+    return response.json()
+}
+
+export async function getCurrentUser(): Promise<UserResponse> {
+    const token = localStorage.getItem("_auth_token")
+    if(!token) {
+        throw new Error("Not logged in")
+    }
+
     const response = await fetch(`${config.url}/api/currentuser`, {
         method: "GET",
         headers: new Headers({"Authorization": `Bearer ${token}`, "Content-Type": "application/json"})

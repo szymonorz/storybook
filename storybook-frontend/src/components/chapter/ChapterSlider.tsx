@@ -21,7 +21,6 @@ export default function ChapterSlider({bookId, chapterNumber}: ChapterSliderProp
     }
 
     useEffect(() => {
-        console.log(chapterNumber, chapterCount)
         getBookInfo(bookId!)
             .then((data) => setChapterCount(data.chapters.length))
     }, [])

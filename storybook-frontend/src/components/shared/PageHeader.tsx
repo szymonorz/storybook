@@ -2,12 +2,14 @@ import { useNavigate } from "react-router"
 import { useContext } from "react"
 import { AuthContext } from "../auth/AuthProvider"
 import SearchBar from "../search/SearchBar"
+import { useTranslation } from "react-i18next"
 
 export default function PageHeader() {
     const navigate = useNavigate()
     const { auth, setAuth } = useContext(AuthContext)
+    const {t} = useTranslation()
     return <div className="page-header">
-        <div onClick={() => navigate("/")}>
+        <div className="page-logo" onClick={() => navigate("/")}>
             StoryBook
         </div>
         <SearchBar/>
@@ -17,7 +19,7 @@ export default function PageHeader() {
             navigate("/")
             setAuth(null)
         }}>
-            Log out
+            {t("logout")}
         </div>) : null}
     </div>
 }

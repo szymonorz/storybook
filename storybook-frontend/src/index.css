@@ -79,12 +79,32 @@ button:focus-visible {
   font-weight: bold;
   background: #eee;
   margin-bottom: 0.5em;
-  cursor: pointer;
   display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+
+}
+
+.page-header .page-logo {
+  width: 30%;
+  cursor: pointer;
+}
+
+.page-header .search-bar {
+    grid-column-start: 2;
+    grid-column-end: 6;
+}
+
+.search-bar input {
+  width: 100%;
+  padding: 1em;
+}
+
+.search-bar input::placeholder {
+  color: black;
 }
 
 .page-header .logout {
-  grid-column: 10;
+  grid-column: -2;
 }
 
 .page {
@@ -247,6 +267,11 @@ button:focus-visible {
   align-items: start;
 }
 
+.login-form input[type="submit"] {
+  font-size: 20px;
+  padding: .3em;
+}
+
 .form-field {
   display: flex;
   flex-direction: column;
@@ -268,12 +293,16 @@ button:focus-visible {
 }
 
 .clickable {
-  text-decoration-line: underline;
   cursor: pointer
 }
 
+.underline {
+  text-decoration-line: underline;
+}
+
 .book {
-  width: 100%
+  width: 100%;
+  font-size: 20px;
 }
 
 .book h1 {
@@ -292,6 +321,7 @@ button:focus-visible {
 .chapter {
   width: 100%;
   height: 100%;
+  font-size: 20px;
 }
 
 .chapter h1 {
@@ -299,7 +329,7 @@ button:focus-visible {
 }
 
 .chapter .content {
-  font-size: 20px;
+  font-size: 24px;
 }
 
 .book-list {
@@ -355,5 +385,52 @@ button:focus-visible {
   }
   button {
     background-color: #f9f9f9;
+  }
+}
+
+@media only screen and (max-width: 800px) {
+  .app {
+    height: 100%;
+  }
+  .page {
+    display: flex;
+    flex-direction: column;
+    flex-flow: column-reverse;
+  }
+
+  .page-header {
+    display: grid;
+    flex-direction: column;
+    height: 20vh;
+  }
+
+  .page-header .search-bar {
+    grid-column-start: 1;
+    grid-column-end: 3;
+  }
+
+  .page-header .logout {
+    grid-column: 1;
+  }
+
+  .nav-segment {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .top-books-segment {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  .main-component {
+    width: 100%;
+    height: 100%;
+  }
+
+  .chapter-slider {
+    width: 50vh;
   }
 }

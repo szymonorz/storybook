@@ -1,50 +1,46 @@
-# React + TypeScript + Vite
+# Storybook Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Frontend dla serwisu Storybook.
 
-Currently, two official plugins are available:
+## Obecna funkcjonalność
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Rejestracja i logowanie użytkownika
+- Na stronie głównej są wyświetlane ostatnio zaktualizowane/utworzone książki
+- Możliwość tworzenia własnych książek i ich rozdziałów
+- Możliwość wyświetlania książek i rozdziałów innych użytkowników
+- Możliwość wyszukiwania innych użytkowników i ich twórczości w serwisie
 
-## Expanding the ESLint configuration
+## Wykorzystane technologie
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- React 18.3.1
+- react-router 7.1.5
+- react-hook-form 7.54.2
+- react-i18next 15.4.0
+- Vite 6.0.11
 
-- Configure the top-level `parserOptions` property like this:
+### react-router
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+Routing w serwisie został obsłużony za pomocą paczki `react-router`. 
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+### react-hook-form
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+W celu swobodnego zarządzania stanem formularzy oraz ich walidacji został wykorzystany pakiet `react-hook-form`.
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+### i18n
+
+Internalizacja wspiera obecnie tylko dwa języki, polski oraz angielski. 
+
+Pliki `pl.json` oraz `en.json` znajdują się w katalogu `src/locales`.
+
+# Uruchomienie
+
+Frontend wymaga działającego backendu oraz bazy danych. Najlepiej uruchomić wszystko razem poprzez dostarczony
+skrypt `docker-compose.yaml`.
+
+W katalogu głównym repozytorium należy uruchomić
+
+```console
+git clone https://github.con/szymonorz/storybook
+cd storybook
+docker compose up --build --no-deps --force-recreate
 ```

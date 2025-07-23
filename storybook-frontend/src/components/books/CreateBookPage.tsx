@@ -2,6 +2,8 @@ import { useForm } from "react-hook-form"
 import { createBook } from "../../utils/api/book"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router"
+import { useContext, useEffect } from "react"
+import { AuthContext } from "../auth/AuthProvider"
 
 
 interface CreateBookFormValues {
@@ -12,9 +14,16 @@ interface CreateBookFormValues {
 }
 
 export default function CreateBookPage() {
+    const {auth} = useContext(AuthContext)
     const {register, handleSubmit} = useForm<CreateBookFormValues>()
     const {t} = useTranslation()
     const navigate = useNavigate()
+
+    useEffect(() => {
+        if(!auth) {
+            navigate("/login?redirect=must_be_logged_in")
+        }
+    }, [])
 
     function onSubmit(data: CreateBookFormValues) {
         data.tags = []

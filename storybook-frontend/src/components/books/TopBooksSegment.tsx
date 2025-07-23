@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react"
 import BookResponse, { getLatestBooks } from "../../utils/api/book"
-import BookPreview from "./BookPreview"
 import BookList from "./BookList"
 
 export default function TopBooksSegment() {

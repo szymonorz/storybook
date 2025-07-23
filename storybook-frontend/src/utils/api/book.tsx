@@ -28,6 +28,16 @@ export async function createBook(req: CreateBookRequest): Promise<BookResponse> 
     return response.json()
 }
 
+export async function getUserBooks(userId: string) {
+    const token = localStorage.getItem("_auth_token")
+    const response = await fetch(`${config.url}/api/user/${userId}/books`, {
+        method: "GET",
+        headers: token ? new Headers({"Authorization": `Bearer ${token}`}): new Headers()
+    })
+
+    return response.json()
+}
+
 export async function getCurrentUserBooks() {
     const token = localStorage.getItem("_auth_token")
     const response = await fetch(`${config.url}/api/currentuser/books`, {

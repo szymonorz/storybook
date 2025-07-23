@@ -8,11 +8,11 @@ import AuthorBooksPage from './components/books/AuthorBooksPage.tsx'
 import CreateBookPage from './components/books/CreateBookPage.tsx'
 import FavouritesPage from './pages/FavouritesPage.tsx'
 import SettingsPage from './pages/SettingsPage.tsx'
-import NotLoggedIn from './components/auth/NotLoggedIn.tsx'
 import BookPage from './components/books/BookPage.tsx'
 import CreateChapterPage from './components/chapter/CreateChapterPage.tsx'
 import ChapterPage from './components/chapter/ChapterPage.tsx'
 import SearchResultsPage from './components/search/SearchResultsPage.tsx'
+import LoginPage from './components/auth/LoginPage.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <BrowserRouter>
@@ -31,7 +31,7 @@ createRoot(document.getElementById('root')!).render(
         <Route path="favourites" element={<FavouritesPage/>}/>
         <Route path="settings" element={<SettingsPage/>}/>
         <Route path="search" element={<SearchResultsPage/>}/>
-        <Route path='notLoggedIn' element={<NotLoggedIn/>}/>
+        <Route path='login' element={<LoginPage/>}/>
       </Route>
       
     </Routes>

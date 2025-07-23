@@ -4,7 +4,7 @@ export interface ChapterContentResponse {
     id: string,
     title: string,
     description: string,
-    authorsNote: string,
+    authorNote: string,
     content: string,
     position: number
 }

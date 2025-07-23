@@ -6,7 +6,7 @@ import { useContext, useState } from "react"
 import { AuthContext } from "./AuthProvider"
 
 interface LoginFormValues {
-    email: string
+    username: string
     password: string
 }
 
@@ -15,23 +15,19 @@ export default function LoginForm() {
     const {t} = useTranslation()
     const {register, handleSubmit} = useForm<LoginFormValues>()
     const [error, setError] = useState<Boolean>(false)
-    const { auth, setAuth } = useContext(AuthContext)
+    const { setAuth } = useContext(AuthContext)
 
     function onSubmit(data: LoginFormValues) {
         loginUser({
-            email: data.email,
+            username: data.username,
             password: data.password
         })
         .then((data) => {
-            console.log(data)
-            if(data instanceof Error) {
-                setError(true)
-            } else {
+                localStorage.setItem("_auth_token", data.access_token)
                 setError(false)
                 const token = localStorage.getItem("_auth_token")
                 setAuth(token)
                 navigate("/home")
-            }
         })
         .catch((err) => console.log(err))
     }
@@ -39,16 +35,16 @@ export default function LoginForm() {
     return (
         <form className="login-form" onSubmit={handleSubmit(onSubmit)}>
             <label className="form-field">
-                <span className="form-text">{t("login_form.email")}</span>
-                <input className="form-input" id="email" type="text" {...register("email")}/>
+                <span className="form-text">{t("login_form.username")}</span>
+                <input className="form-input" id="username" type="text" {...register("username")}/>
             </label>
             <label className="form-field">
                 <span className="form-text">{t("login_form.password")}</span>
                 <input className="form-input" id="password" type="password" {...register("password")}/>
             </label>
-            <input type="submit" value="Log in"/>
+            <input type="submit" value={t("login_form.login")}/>
             <label>
-                {t("login_form.no_account")} <span className="clickable" onClick={() => navigate("/register")}>{t("login_form.register_today")}</span>
+                {t("login_form.no_account")} <span className="clickable underline" onClick={() => navigate("/register")}>{t("login_form.register_today")}</span>
             </label>
             {error ? (<span className="login-error">{t("login_form.failed")}</span>): null }
         </form>

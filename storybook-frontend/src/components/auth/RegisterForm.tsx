@@ -1,7 +1,8 @@
 import { useTranslation } from "react-i18next";
 import { registerUser } from "../../utils/api/user";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router";
 
 
 interface RegisterFormValues {
@@ -14,40 +15,26 @@ interface RegisterFormValues {
 
 export default function RegisterForm() {
     const { t } = useTranslation()
+    const navigate = useNavigate()
+
     const [success, setSuccess] = useState<Boolean>(false)
     const [error, setError] = useState<number>(-1)
 
     const {register, formState, watch, handleSubmit} = useForm<RegisterFormValues>()
     const {errors} = formState
 
-    useEffect(() => {
-        console.log("hello?", success, error)
-        if(!success && error != -1) {
-            console.log("Failed to create user")
-        }
-    }, [success, error])
-
     function onSubmit(data: RegisterFormValues) {
-            console.log("????")
             registerUser({
                 username: data.username,
                 email: data.email,
                 password: data.password
             })
-                .then((data) => {
-                    
-                    console.log(data)
-                    if(data.status_code != 200) {
-                        setSuccess(false)
-                        setError(409)
-                    } else {
-                        setSuccess(true)
-                        setError(data.status_code)
-                    }
+                .then(() => {
+                    setSuccess(true)
+                    setError(-1)
+                    navigate("/login?redirect=register_success")
                 })
-                .catch(err => {
-                    console.log("fail")
-                    console.log(err)
+                .catch(() => {
                     setError(1)
                     setSuccess(false)
                 })
@@ -127,7 +114,7 @@ export default function RegisterForm() {
                 })}/>
                 <span className="form-validation-error">{errors.confirm_password?.message}</span>
             </label>
-            <input type="submit" value="Register" />
+            <input type="submit" value={t("register_form.register")} />
         </form>
     )
 }

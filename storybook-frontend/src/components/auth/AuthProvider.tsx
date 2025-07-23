@@ -1,10 +1,10 @@
-import { useLayoutEffect, useState } from "react";
+import { ReactNode, useLayoutEffect, useState } from "react";
 import { createContext } from 'react'
 import { getCurrentUser } from "../../utils/api/user";
 
 export interface Auth {
     auth: string | null,
-    setAuth: (c: string) => void
+    setAuth: (c: string | null) => void
 }
 
 export const AuthContext = createContext<Auth>({
@@ -12,19 +12,20 @@ export const AuthContext = createContext<Auth>({
      setAuth: () => {}
 })
 
-export default function AuthProvider({children}) {
+type AuthProviderProps = {
+    children: ReactNode;
+};
+
+export default function AuthProvider({children}: AuthProviderProps) {
     const [auth, setAuth] = useState<string| null>(null)
 
     useLayoutEffect(() => {
         const token = localStorage.getItem("_auth_token")
-        console.log(token)
         if(token != null) {
-            getCurrentUser(token)
-                .then((userData) => {
-                    console.log(userData)
+            getCurrentUser()
+                .then(() => {
                     setAuth(token)
-                }).catch((err) => {
-                    console.log(err)
+                }).catch(() => {
                     setAuth(null)
                 })
         } else {

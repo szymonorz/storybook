@@ -13,8 +13,6 @@ export default function ChapterPage() {
     const navigate = useNavigate()
 
     useEffect(() => {
-        console.log("Hello?")
-        console.log
         if (!bookId || !chapterNumber) {
             setError("No chapter or book found")
             return
@@ -37,12 +35,18 @@ export default function ChapterPage() {
                 (<div>Chapter not found</div>) 
                 : 
                 (<div className="chapter">
-                    <div className="chapter-list" onClick={() => chapterList()}>{t("chapter.back")}</div>
+                    <div className="chapter-list clickable" onClick={() => chapterList()}>{t("chapter.back")}</div>
                     <ChapterSlider bookId={bookId} chapterNumber={Number(chapterNumber)}/>
                     <h1>{t("chapter-page.chapter")} {chapterNumber}: {chapter?.title}</h1>
-                    {chapter?.authorsNote != undefined && chapter.authorsNote.length != 0 ? <h3>{t("chapter.authors-note")}: {chapter?.authorsNote}</h3>: <h3></h3>}
-                    <label htmlFor="description">{t("chapter-page.description")}:</label>
-                    <div className="description">{chapter?.description}</div>
+                    {chapter?.authorNote != undefined && chapter.authorNote.length != 0 ? <pre>{t("chapter-page.authors-note")}: {chapter?.authorNote}</pre>: <h3></h3>}
+                    {chapter?.description != undefined && chapter.description.length != 0 ? 
+                    (   <div>                 
+                            <label htmlFor="description">{t("chapter-page.description")}:</label>
+                            <pre className="description">{chapter?.description}</pre>
+                        </div>
+                        )
+                    : <h3></h3>}
+
                     <pre className="content">{chapter?.content}</pre>
                     <ChapterSlider bookId={bookId} chapterNumber={Number(chapterNumber)}/>
                 </div>)}

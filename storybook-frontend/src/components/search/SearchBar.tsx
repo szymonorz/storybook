@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 
 interface SearchBarFormValues {
@@ -9,6 +10,7 @@ interface SearchBarFormValues {
 export default function SearchBar() {
     const [query, setQueryState] = useState<string>()
     const navigate = useNavigate()
+    const {t} = useTranslation()
     const {register, handleSubmit} = useForm<SearchBarFormValues>()
 
     function onSubmit() {
@@ -21,9 +23,10 @@ export default function SearchBar() {
         setQueryState(event.target.value)
     }
 
-    return <div>
+    return <div className="search-bar">
             <form onSubmit={handleSubmit(onSubmit)}>
-                <input type="text"
+                <input type="text" 
+                    placeholder={t("search-bar.placeholder")}
                  {...register("query", {
                     onChange: handleChange
                 })}/>
