@@ -20,7 +20,7 @@ public class UserService {
 
     public Optional<User> createNewUser(CreateUserRequest req) {
         if(userRepository.existsByEmail(req.email())) {
-            throw new AlreadyExistsException("Account with this email already exists");
+            throw new AlreadyExistsException("Account with this username already exists");
         }
 
         if(userRepository.existsByUsername(req.username())) {
@@ -60,7 +60,7 @@ public class UserService {
         Check if login request is valid.
      */
 //    public Optional<UserResponse> verifyUser(LoginRequest req) {
-//        Optional<User> userOptional = userRepository.findByEmail(req.email());
+//        Optional<User> userOptional = userRepository.findByEmail(req.username());
 //        if (userOptional.isEmpty()) {
 //            return Optional.empty();
 //        }

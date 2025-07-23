@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @PropertySource("classpath:application.properties")
@@ -42,7 +41,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         if (request.getMethod().equals("POST")) {
             try {
                 LoginRequest user = new ObjectMapper().readValue(request.getInputStream(), LoginRequest.class);
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(user.email(), user.password());
+                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(user.username(), user.password());
                 return authenticationManager.authenticate(authToken);
             } catch (IOException e) {
                 e.printStackTrace();
