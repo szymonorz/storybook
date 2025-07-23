@@ -3,6 +3,7 @@ import { useContext } from "react"
 import { AuthContext } from "../auth/AuthProvider"
 import SearchBar from "../search/SearchBar"
 import { useTranslation } from "react-i18next"
+import LocalesSelector from "./LocalesSelector"
 
 export default function PageHeader() {
     const navigate = useNavigate()
@@ -13,6 +14,7 @@ export default function PageHeader() {
             StoryBook
         </div>
         <SearchBar/>
+        <LocalesSelector/>
         {auth != null ? (
         <div className="logout" onClick={() => {
             localStorage.removeItem("_auth_token")
