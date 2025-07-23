@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  storybook-be:
+    build:
+      context: ./storybook-backend
+      dockerfile: Dockerfile
+    container_name: storybook-be
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=sqlite
+    volumes:
+      - db:/app/db
+    networks:
+      - app-network
+
+  storybook-fe:
+    build:
+      context: ./storybook-frontend
+      dockerfile: Dockerfile
+    container_name: storybook-fe
+    environment:
+      - REACT_APP_API_URL=http://storybook-be:8080
+    ports:
+      - "80:80"
+    depends_on:
+      - storybook-be
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  db:
