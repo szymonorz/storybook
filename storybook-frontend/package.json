@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build-prod": "tsc -b && vite build --mode prod",
     "lint": "eslint .",
     "preview": "vite preview",
     "i18n": "formatjs extract 'src/**/*.{ts,tsx}' --ignore '**/*.d.ts' --out-file build/messages.json && formatjs compile build/messages.json --out-file src/locales/en.json"

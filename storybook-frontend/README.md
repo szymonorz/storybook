@@ -43,10 +43,17 @@ Wykrywanie domyślnego języka przeglądarki oraz możliwość zmiany języka za
 Frontend wymaga działającego backendu oraz bazy danych. Najlepiej uruchomić wszystko razem poprzez dostarczony
 skrypt `docker-compose.yaml`.
 
+Należy utworzyć w katalogu frontendu plik `.env.local` i ustawić zmienną `VITE_APP_API_URL`. Krok ten można pominąć dla localhost, ponieważ jego domyślną wartością jest `http://localhost:8080`.
+
 W katalogu głównym repozytorium należy uruchomić
 
 ```console
 git clone https://github.con/szymonorz/storybook
 cd storybook
+
+cat << EOF > .env.local 
+VITE_APP_API_URL=http://localhost:8080
+EOF
+
 docker compose up --build --no-deps --force-recreate
 ```
