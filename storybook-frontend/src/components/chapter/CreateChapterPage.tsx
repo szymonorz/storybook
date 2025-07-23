@@ -2,8 +2,7 @@ import { useNavigate, useParams } from "react-router"
 import { useForm } from "react-hook-form"
 import { createChapter, NewBookChapterRequest } from "../../utils/api/chapter"
 import { useTranslation } from "react-i18next"
-import { useContext, useEffect } from "react"
-import { AuthContext } from "../auth/AuthProvider"
+import { useEffect } from "react"
 
 interface CreateChapterFormValues {
     chapterTitle: string,
@@ -13,13 +12,13 @@ interface CreateChapterFormValues {
 }
 
 export default function CreateOrEditChapterPage() {
-    const {auth} = useContext(AuthContext)
     const {register, handleSubmit} = useForm<CreateChapterFormValues>()
     const navigate = useNavigate()
     const {t} = useTranslation()
     const {bookId} = useParams()
 
     useEffect(() => {
+        const auth = localStorage.getItem("_auth_token")
         if(!auth) {
             navigate("/login?redirect=must_be_logged_in")
         }
