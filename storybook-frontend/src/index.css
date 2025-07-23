@@ -223,7 +223,7 @@ button:focus-visible {
 
 .chapter-form .chapter-content {
   height: 100%;
- 
+  
 }
 
 .chapter-form input {
@@ -276,6 +276,7 @@ button:focus-visible {
   display: flex;
   flex-direction: column;
   align-items: start;
+  color: black;
 }
 
 .login-form input[type="submit"] {
@@ -341,6 +342,7 @@ button:focus-visible {
 
 .chapter .content {
   font-size: 24px;
+  text-wrap: unset;
 }
 
 .book-list {
