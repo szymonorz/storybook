@@ -38,7 +38,9 @@ public class AuthorizationFilter extends OncePerRequestFilter {
 
     private final List<AntPathRequestMatcher> anonymousAllowed = List.of(
                 new AntPathRequestMatcher( "/swagger-ui/**", "GET"),
+                new AntPathRequestMatcher( "/swagger-ui.html", "GET"),
                 new AntPathRequestMatcher( "/v3/api-docs/**", "GET"),
+                new AntPathRequestMatcher( "/v3/api-docs", "GET"),
                 new AntPathRequestMatcher("/auth/**", "POST" ),
                 new AntPathRequestMatcher("/api/user/register", "POST"),
                 new AntPathRequestMatcher("/api/user/**", "GET"),
