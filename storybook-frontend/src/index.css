@@ -424,7 +424,7 @@ textarea {
   .page-header {
     display: grid;
     flex-direction: column;
-    height: 30%;
+    height: 4rem;
     grid-template-rows: 1fr 1fr 1fr 1fr
   }
 
