@@ -424,7 +424,7 @@ textarea {
   .page-header {
     display: grid;
     flex-direction: column;
-    height: 4rem;
+    height: 30%;
     grid-template-rows: 1fr 1fr 1fr 1fr
   }
 
@@ -464,5 +464,9 @@ textarea {
 
   .chapter-slider {
     width: 50vh;
+  }
+
+  .create-form button[type="submit"] {
+    width: 20rem;
   }
 }
