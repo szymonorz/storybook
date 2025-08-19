@@ -44,7 +44,7 @@ public class UserService {
         User user = userOptional.get();
 
         List<Role> rolesInDB = roleService.getRolesByNames(req.roles());
-        user.setUserRoles(rolesInDB);
+        user.setRoles(rolesInDB);
         userRepository.save(user);
     }
 
@@ -81,7 +81,7 @@ public class UserService {
         return new DetailedUserResponse(user.getId(),
                                 user.getUsername(),
                                 user.getEmail(),
-                                user.getUserRoles()
+                                user.getRoles()
                                         .stream()
                                         .map(role ->  new RoleResponse(
                                                 role.getId(),

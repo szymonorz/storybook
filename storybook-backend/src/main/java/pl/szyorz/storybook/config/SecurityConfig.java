@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,6 +18,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import pl.szyorz.storybook.auth.AuthenticationFilter;
@@ -95,4 +98,23 @@ public class SecurityConfig{
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+
+//    private final List<RequestMatcher> anonymousAllowed = List.of(
+//            new AntPathRequestMatcher( "/swagger-ui/**", "GET"),
+//            new AntPathRequestMatcher( "/swagger-ui.html", "GET"),
+//            new AntPathRequestMatcher( "/v3/api-docs/**", "GET"),
+//            new AntPathRequestMatcher( "/v3/api-docs", "GET"),
+//            new AntPathRequestMatcher("/auth", "POST"),
+//            new AntPathRequestMatcher("/auth/**", "POST" ),
+//            new AntPathRequestMatcher("/api/user/register", "POST"),
+//            new AntPathRequestMatcher("/api/user/**", "GET"),
+//            new AntPathRequestMatcher("/api/book/**", "GET")
+//    );
+//
+//    @Bean
+//    public WebSecurityCustomizer webSecurityCustomizer() {
+//        return web -> web.ignoring().requestMatchers(anonymousAllowed.toArray(new RequestMatcher[1]));
+//    }
+
+
 }

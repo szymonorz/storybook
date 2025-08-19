@@ -11,6 +11,7 @@ import java.util.UUID;
 
 @Repository
 public interface RoleRepository extends CrudRepository<Role, UUID> {
+    List<Role> findAll();
     List<Role> findByNameIn(Collection<String> nameList);
     List<Role> findAllByUsersId(UUID userId);
 }

@@ -19,15 +19,10 @@ public class Role {
     private String name;
     private String description;
 
-    @ManyToMany
-    @JoinTable(
-            name = "users_roles",
-            joinColumns = @JoinColumn(name = "role_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
+    @ManyToMany(mappedBy = "roles")
     private List<User> users;
 
-    @ElementCollection(targetClass = RolePrivilege.class)
+    @ElementCollection(targetClass = RolePrivilege.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "role_privileges", joinColumns = @JoinColumn(name = "role_id"))
     @Column(name = "privilege")
     @Enumerated(EnumType.STRING)

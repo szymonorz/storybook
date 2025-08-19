@@ -10,9 +10,7 @@ import pl.szyorz.storybook.entity.role.Role;
 import pl.szyorz.storybook.entity.role.RoleRepository;
 import pl.szyorz.storybook.entity.user.exception.DoesntExistException;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -27,16 +25,21 @@ public class DetailsService implements UserDetailsService {
             throw new DoesntExistException("User not found");
         }
         User user = userOptional.get();
-        List<Role> roles = roleRepository.findAllByUsersId(user.getId());
-        Collection<SimpleGrantedAuthority> authorities = roles
+        List<Role> _roles = roleRepository.findAllByUsersId(user.getId());
+        String[] roles = _roles
                 .stream()
-                .map(role ->
-                        new SimpleGrantedAuthority(role.getName()))
-                .toList();
+                .map(Role::getName)
+                .toArray(String[]::new);
+
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        for (Role role: _roles) {
+            role.getPrivileges().forEach(p -> authorities.add(new SimpleGrantedAuthority(p.name())));
+        }
 
         return org.springframework.security.core.userdetails.User
                 .withUsername(username)
                 .password(user.getPassword())
+                .roles(roles)
                 .authorities(authorities)
                 .build();
     }

@@ -3,6 +3,7 @@ package pl.szyorz.storybook.entity.role;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.szyorz.storybook.entity.role.data.CreateRoleRequest;
+import pl.szyorz.storybook.entity.role.data.RoleResponse;
 
 import java.util.*;
 
@@ -26,11 +27,27 @@ public class RoleService {
         return repository.findAllByUsersId(userId);
     }
 
+    public List<RoleResponse> getAllRoles() {
+        return repository.findAll()
+                .stream()
+                .map(this::convertDBtoAPIRole)
+                .toList();
+    }
+
     private Role convertAPIRoleToDBRole(CreateRoleRequest req) {
         Role role = new Role();
         role.setName(req.name());
         role.setDescription(req.description());
         role.setPrivileges(req.privileges());
         return role;
+    }
+
+    private RoleResponse convertDBtoAPIRole(Role role) {
+        return new RoleResponse(
+                role.getId(),
+                role.getName(),
+                role.getDescription(),
+                role.getPrivileges()
+        );
     }
 }
