@@ -1,25 +1,20 @@
 package pl.szyorz.storybook;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import pl.szyorz.storybook.entity.book.Book;
 import pl.szyorz.storybook.entity.book.BookController;
-import pl.szyorz.storybook.entity.book.BookRepository;
 import pl.szyorz.storybook.entity.book.BookService;
 import pl.szyorz.storybook.entity.book.data.BookResponse;
 import pl.szyorz.storybook.entity.book.data.CreateBookRequest;
 import pl.szyorz.storybook.entity.book.data.NewBookChapterRequest;
 import pl.szyorz.storybook.entity.chapter.Chapter;
 import pl.szyorz.storybook.entity.chapter.data.ShortChapterResponse;
-import pl.szyorz.storybook.entity.user.UserRepository;
 import pl.szyorz.storybook.entity.user.data.UserResponse;
 
 import java.util.List;
@@ -62,7 +57,7 @@ class BookTests {
     void getBookById_shouldReturn200WithBook() throws Exception {
         UUID id = UUID.randomUUID();
         BookResponse resp = sampleBook(id);
-        given(bookService.getBookById(eq(id))).willReturn(Optional.of(resp));
+        given(bookService.findBookById(eq(id))).willReturn(Optional.of(resp));
 
         mockMvc.perform(get("/api/book/{bookId}", id))
                 .andExpect(status().isOk())
@@ -74,7 +69,7 @@ class BookTests {
     @Test
     void getBookById_shouldReturn400WhenMissing() throws Exception {
         UUID id = UUID.randomUUID();
-        given(bookService.getBookById(eq(id))).willReturn(Optional.empty());
+        given(bookService.findBookById(eq(id))).willReturn(Optional.empty());
 
         mockMvc.perform(get("/api/book/{bookId}", id))
                 .andExpect(status().isBadRequest());

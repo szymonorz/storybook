@@ -1,11 +1,11 @@
 package pl.szyorz.storybook.entity.chapter;
 
 import lombok.AllArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pl.szyorz.storybook.entity.chapter.data.ChapterContentResponse;
+import pl.szyorz.storybook.entity.chapter.data.UpdateChapterRequest;
 
 import java.util.UUID;
 
@@ -20,6 +20,15 @@ public class ChapterController {
                                                                     @PathVariable("chapterNumber") int chapterNumber)
     {
         return chapterService.getChapterContent(bookId, chapterNumber)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.badRequest().build());
+    }
+
+    @PatchMapping(value = "/api/chapter/{chapterId}", consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ChapterContentResponse> updateChapter(@PathVariable("chapterId") UUID chapterId,
+                                                                @RequestBody UpdateChapterRequest req) {
+        return chapterService.updateChapter(chapterId, req)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.badRequest().build());
     }

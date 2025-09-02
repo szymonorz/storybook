@@ -15,9 +15,8 @@ import pl.szyorz.storybook.entity.user.UserRepository;
 import pl.szyorz.storybook.entity.user.data.UserResponse;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -36,17 +35,17 @@ public class BookService {
         return Optional.of(mapToBookResponse(saved, user));
     }
 
-    public Optional<BookResponse> getBookById(UUID bookId) {
+    public Optional<BookResponse> findBookById(UUID bookId) {
         return bookRepository.findById(bookId)
                 .map(book -> mapToBookResponse(book, book.getAuthor()));
     }
 
-    public List<BookResponse> getBooksByUserId(UUID userId) {
+    public List<BookResponse> findBooksByUserId(UUID userId) {
         return bookRepository.findAllByAuthorId(userId)
                 .stream().map(book -> mapToBookResponse(book, book.getAuthor())).toList();
     }
 
-    public List<BookResponse> getBooksByUsername(String username) {
+    public List<BookResponse> findBooksByUsername(String username) {
         return bookRepository.findAllByAuthorUsername(username)
                 .stream().map(book -> mapToBookResponse(book, book.getAuthor())).toList();
     }
@@ -92,6 +91,50 @@ public class BookService {
             book.getChapters().get(i).setPosition(i + 1);
 
         bookRepository.save(book);
+    }
+
+    @Transactional
+    public Optional<List<ShortChapterResponse>> reorderChapters(UUID bookId, List<UUID> orderedIds) {
+        if (orderedIds == null) return Optional.empty();
+
+        var bookOpt = bookRepository.findById(bookId);
+        if (bookOpt.isEmpty()) return Optional.empty();
+
+        List<Chapter> all = chapterRepository.findAllByBookIdOrderByPositionAsc(bookId);
+
+        Map<UUID, Chapter> byId = all.stream().collect(Collectors.toMap(Chapter::getId, c -> c));
+
+        for (UUID id : orderedIds) {
+            if (!byId.containsKey(id)) {
+                return Optional.empty();
+            }
+        }
+
+        List<Chapter> newOrder = new ArrayList<>(orderedIds.size() + Math.max(0, all.size() - orderedIds.size()));
+        for (UUID id : orderedIds) newOrder.add(byId.get(id));
+
+        Set<UUID> provided = new HashSet<>(orderedIds);
+        for (Chapter ch : all) {
+            if (!provided.contains(ch.getId())) newOrder.add(ch);
+        }
+
+        int pos = 1;
+        for (Chapter ch : newOrder) {
+            ch.setPosition(pos++);
+        }
+
+        chapterRepository.saveAll(newOrder);
+
+        List<ShortChapterResponse> response = newOrder.stream()
+                .map(ch -> new ShortChapterResponse(
+                        ch.getId(),
+                        ch.getTitle(),
+                        ch.getDescription(),
+                        ch.getPosition()
+                ))
+                .toList();
+
+        return Optional.of(response);
     }
 
     public List<BookResponse> latest(int n) {

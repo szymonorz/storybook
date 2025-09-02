@@ -15,5 +15,6 @@ public interface ChapterRepository extends CrudRepository<Chapter, UUID> {
     Optional<Chapter> findById(UUID id);
     Optional<Chapter> findByIdAndBookId(UUID id, UUID bookId);
     Optional<Chapter> findByBookIdAndPosition(UUID bookId, int position);
+    List<Chapter> findAllByBookIdOrderByPositionAsc(UUID bookId);
     Chapter save(Chapter chapter);
 }

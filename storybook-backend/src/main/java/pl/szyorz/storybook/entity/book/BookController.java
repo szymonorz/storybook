@@ -2,11 +2,13 @@ package pl.szyorz.storybook.entity.book;
 
 import lombok.AllArgsConstructor;
 import org.springframework.boot.context.properties.bind.DefaultValue;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.szyorz.storybook.entity.book.data.BookResponse;
 import pl.szyorz.storybook.entity.book.data.CreateBookRequest;
 import pl.szyorz.storybook.entity.book.data.NewBookChapterRequest;
+import pl.szyorz.storybook.entity.book.data.UpdateChaptersOrderRequest;
 import pl.szyorz.storybook.entity.chapter.data.ShortChapterResponse;
 
 import java.security.Principal;
@@ -24,12 +26,12 @@ public class BookController {
      */
     @GetMapping("/api/currentuser/books")
     public ResponseEntity<List<BookResponse>> currentUserBooks(Principal principal) {
-        return ResponseEntity.ok(bookService.getBooksByUsername(principal.getName()));
+        return ResponseEntity.ok(bookService.findBooksByUsername(principal.getName()));
     }
 
     @GetMapping("/api/user/{userId}/books")
     public ResponseEntity<List<BookResponse>> userBooks(@PathVariable("userId") UUID userId) {
-        return ResponseEntity.ok(bookService.getBooksByUserId(userId));
+        return ResponseEntity.ok(bookService.findBooksByUserId(userId));
     }
 
     @PostMapping("/api/book/chapter")
@@ -46,9 +48,23 @@ public class BookController {
                 .orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
+    @PatchMapping(
+            value = "/api/book/{bookId}/chapters/positions",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<List<ShortChapterResponse>> reorderChapters(
+            @PathVariable UUID bookId,
+            @RequestBody UpdateChaptersOrderRequest req
+    ) {
+        return bookService.reorderChapters(bookId, req.chapterIdsInOrder())
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.badRequest().build());
+    }
+
     @GetMapping("/api/book/{bookId}")
     public ResponseEntity<BookResponse> bookById(@PathVariable("bookId") UUID bookId) {
-        return bookService.getBookById(bookId)
+        return bookService.findBookById(bookId)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.badRequest().build());
     }

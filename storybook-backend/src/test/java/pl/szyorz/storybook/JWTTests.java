@@ -62,7 +62,7 @@ class JWTTests {
 
         role = new Role();
         role.setName("ADMIN");
-        role.setPrivileges(List.of(RolePrivilege.VIEW));
+        role.setPrivileges(List.of(RolePrivilege.VIEW_ROLE));
 
         when(userRepository.findByUsername("adam")).thenReturn(Optional.of(user));
         when(roleRepository.findAllByUsersId(userId)).thenReturn(List.of(role));
