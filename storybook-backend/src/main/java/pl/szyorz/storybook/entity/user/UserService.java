@@ -74,10 +74,10 @@ public class UserService {
 
     public Optional<DetailedUserResponse> getByUsername(String username) {
         return userRepository.findByUsername(username)
-                .map(this::convertDBUserToAPIUser);
+                .map(UserService::convertDBUserToAPIUser);
     }
 
-    private DetailedUserResponse convertDBUserToAPIUser(User user) {
+    public static DetailedUserResponse convertDBUserToAPIUser(User user) {
         return new DetailedUserResponse(user.getId(),
                                 user.getUsername(),
                                 user.getEmail(),
