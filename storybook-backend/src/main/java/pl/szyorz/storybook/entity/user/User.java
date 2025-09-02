@@ -5,7 +5,6 @@ import lombok.Data;
 import pl.szyorz.storybook.entity.book.Book;
 import pl.szyorz.storybook.entity.role.Role;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
