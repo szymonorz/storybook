@@ -1,6 +1,7 @@
 package pl.szyorz.storybook.entity.user;
 
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.szyorz.storybook.entity.role.Role;
@@ -48,31 +49,43 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public Optional<UserWithoutRolesResponse> getUser(UUID userId) {
+    public Optional<UserWithoutRolesResponse> findById(UUID userId) {
         return userRepository.findById(userId).map(user -> new UserWithoutRolesResponse(user.getId(), user.getUsername()));
     }
 
-    public List<Role> getUserRoles(UUID userId) {
-        return roleService.getUserRoles(userId);
+    public List<Role> findUserRoles(UUID userId) {
+        return roleService.findRolesByUserId(userId);
     }
 
-    /*
-        Check if login request is valid.
-     */
-//    public Optional<UserResponse> verifyUser(LoginRequest req) {
-//        Optional<User> userOptional = userRepository.findByEmail(req.username());
-//        if (userOptional.isEmpty()) {
-//            return Optional.empty();
-//        }
-//        User user = userOptional.get();
-//        if(!passwordEncoder.matches(req.password(), user.getPassword())){
-//            return Optional.empty();
-//        }
-//        UserResponse resp = convertDBUserToAPIUser(user);
-//        return Optional.of(resp);
-//    }
+    @PreAuthorize("hasAuthority('SUPERUSER') or hasAuthority('MODERATE_USERS') or @userSecurity.isSelf(#userId, authentication)")
+    public Optional<UserWithoutRolesResponse> updateUser(UUID userId, UpdateUserRequest req) {
+        var ou = userRepository.findById(userId);
+        if (ou.isEmpty()) return Optional.empty();
+        var user = ou.get();
 
-    public Optional<DetailedUserResponse> getByUsername(String username) {
+        if (req.username() != null && !req.username().equals(user.getUsername())) {
+            if (userRepository.existsByUsername(req.username())) {
+                throw new AlreadyExistsException("username already exists");
+            }
+            user.setUsername(req.username());
+        }
+
+        if (req.email() != null && !req.email().equals(user.getEmail())) {
+            if (userRepository.existsByEmail(req.email())) {
+                throw new AlreadyExistsException("email already exists");
+            }
+            user.setEmail(req.email());
+        }
+
+        if (req.password() != null) {
+            user.setPassword(passwordEncoder.encode(req.password()));
+        }
+
+        var saved = userRepository.save(user);
+        return Optional.of(new UserWithoutRolesResponse(saved.getId(), saved.getUsername()));
+    }
+
+    public Optional<DetailedUserResponse> findByUsername(String username) {
         return userRepository.findByUsername(username)
                 .map(UserService::convertDBUserToAPIUser);
     }

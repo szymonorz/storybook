@@ -2,11 +2,9 @@ package pl.szyorz.storybook.entity.book;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
-import pl.szyorz.storybook.entity.book.data.BookResponse;
-import pl.szyorz.storybook.entity.book.data.ChapterOrderUpdateRequest;
-import pl.szyorz.storybook.entity.book.data.CreateBookRequest;
-import pl.szyorz.storybook.entity.book.data.NewBookChapterRequest;
+import pl.szyorz.storybook.entity.book.data.*;
 import pl.szyorz.storybook.entity.chapter.Chapter;
 import pl.szyorz.storybook.entity.chapter.ChapterRepository;
 import pl.szyorz.storybook.entity.chapter.data.ShortChapterResponse;
@@ -146,6 +144,37 @@ public class BookService {
         String wildcardLookup = '%' + lookup + '%';
         return bookRepository.search(wildcardLookup, n)
                 .stream().map(book -> mapToBookResponse(book, book.getAuthor())).toList();
+    }
+
+    @PreAuthorize(
+            "hasAuthority('SUPERUSER') or @userSecurity.isBookAuthor(#bookId, authentication)"
+    )
+    public Optional<BookResponse> updateBook(
+            UUID bookId,
+            UpdateBookRequest req
+    ) {
+        Optional<Book> ob = bookRepository.findById(bookId);
+        if (ob.isEmpty()) return Optional.empty();
+
+        Book b = ob.get();
+        if (req.title() != null) b.setTitle(req.title());
+        if (req.description() != null) b.setDescription(req.description());
+
+        Book saved = bookRepository.save(b);
+
+        return Optional.of(new BookResponse(
+                saved.getId(),
+                saved.getTitle(),
+                saved.getDescription(),
+                new UserResponse(
+                        saved.getAuthor().getId(), saved.getAuthor().getUsername()
+                ),
+                saved.getChapters().stream().map(c ->
+                        new ShortChapterResponse(
+                                c.getId(), c.getTitle(), c.getDescription(), c.getPosition()
+                        )
+                ).toList()
+        ));
     }
 
     /* Map the record class to entity class */

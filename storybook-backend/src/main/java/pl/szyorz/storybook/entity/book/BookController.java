@@ -1,14 +1,12 @@
 package pl.szyorz.storybook.entity.book;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.szyorz.storybook.entity.book.data.BookResponse;
-import pl.szyorz.storybook.entity.book.data.CreateBookRequest;
-import pl.szyorz.storybook.entity.book.data.NewBookChapterRequest;
-import pl.szyorz.storybook.entity.book.data.UpdateChaptersOrderRequest;
+import pl.szyorz.storybook.entity.book.data.*;
 import pl.szyorz.storybook.entity.chapter.data.ShortChapterResponse;
 
 import java.security.Principal;
@@ -25,17 +23,23 @@ public class BookController {
         Return logged in user's books
      */
     @GetMapping("/api/currentuser/books")
-    public ResponseEntity<List<BookResponse>> currentUserBooks(Principal principal) {
+    public ResponseEntity<List<BookResponse>> currentUserBooks(
+            Principal principal
+    ) {
         return ResponseEntity.ok(bookService.findBooksByUsername(principal.getName()));
     }
 
     @GetMapping("/api/user/{userId}/books")
-    public ResponseEntity<List<BookResponse>> userBooks(@PathVariable("userId") UUID userId) {
+    public ResponseEntity<List<BookResponse>> userBooks(
+            @PathVariable("userId") UUID userId
+    ) {
         return ResponseEntity.ok(bookService.findBooksByUserId(userId));
     }
 
     @PostMapping("/api/book/chapter")
-    public ResponseEntity<ShortChapterResponse> createChapterInBook(@RequestBody NewBookChapterRequest request) {
+    public ResponseEntity<ShortChapterResponse> createChapterInBook(
+            @Valid @RequestBody NewBookChapterRequest request
+    ) {
         return bookService.addNewChapter(request)
                 .map(c ->
                         ResponseEntity.ok(
@@ -63,14 +67,29 @@ public class BookController {
     }
 
     @GetMapping("/api/book/{bookId}")
-    public ResponseEntity<BookResponse> bookById(@PathVariable("bookId") UUID bookId) {
+    public ResponseEntity<BookResponse> bookById(
+            @PathVariable("bookId") UUID bookId
+    ) {
         return bookService.findBookById(bookId)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
+    @PatchMapping("/api/book/{bookId}")
+    public ResponseEntity<BookResponse> updateBook(
+            @PathVariable("bookId") java.util.UUID bookId,
+            @Valid @RequestBody UpdateBookRequest request
+    ) {
+        return bookService.updateBook(bookId, request)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(403).build());
+    }
+
     @PostMapping("/api/book")
-    public ResponseEntity<BookResponse> createBook(Principal principal, @RequestBody CreateBookRequest request) {
+    public ResponseEntity<BookResponse> createBook(
+            Principal principal,
+            @Valid @RequestBody CreateBookRequest request
+    ) {
         Optional<BookResponse> bookOptional = bookService.createBook(request, principal.getName());
 
         return bookOptional
@@ -79,14 +98,19 @@ public class BookController {
     }
 
     @GetMapping("/api/book/latest")
-    public ResponseEntity<List<BookResponse>> latest(Principal principal, @RequestParam(value = "n", defaultValue = "10", required = false) int n) {
+    public ResponseEntity<List<BookResponse>> latest(
+            Principal principal,
+            @RequestParam(value = "n", defaultValue = "10", required = false) int n
+    ) {
         return ResponseEntity.ok(bookService.latest(n));
     }
 
     @GetMapping("/api/book/search")
-    public ResponseEntity<List<BookResponse>> search(Principal principal,
-                                                     @RequestParam(value = "q") String lookup,
-                                                     @RequestParam(value = "n", defaultValue = "10", required = false) int n) {
+    public ResponseEntity<List<BookResponse>> search(
+            Principal principal,
+            @RequestParam(value = "q") String lookup,
+            @RequestParam(value = "n", defaultValue = "10", required = false) int n
+    ) {
         return ResponseEntity.ok(bookService.search(lookup, n));
     }
 }

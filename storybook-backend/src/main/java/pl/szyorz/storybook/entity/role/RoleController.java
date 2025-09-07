@@ -20,7 +20,7 @@ public class RoleController {
     @PreAuthorize("hasAuthority('SUPERUSER') || hasAuthority('VIEW_ROLE')")
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<RoleResponse>> allRoles() {
-        return ResponseEntity.ok(roleService.getAllRoles());
+        return ResponseEntity.ok(roleService.findAllRoles());
     }
 
     @PreAuthorize("hasAuthority('SUPERUSER')")
@@ -30,27 +30,35 @@ public class RoleController {
     }
 
     @GetMapping("/{roleId}/users")
-    public ResponseEntity<List<DetailedUserResponse>> usersByRole(@PathVariable UUID roleId) {
+    public ResponseEntity<List<DetailedUserResponse>> usersByRole(
+            @PathVariable UUID roleId
+    ) {
         return ResponseEntity.ok(roleService.findUsersByRole(roleId));
     }
 
     @PostMapping("/{roleId}/users/{userId}")
-    public ResponseEntity<Void> assignRoleToUser(@PathVariable UUID roleId,
-                                                 @PathVariable UUID userId) {
+    public ResponseEntity<Void> assignRoleToUser(
+            @PathVariable UUID roleId,
+            @PathVariable UUID userId
+    ) {
         roleService.assignRoleToUser(roleId, userId);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{roleId}/users/{userId}")
-    public ResponseEntity<Void> removeRoleFromUser(@PathVariable UUID roleId,
-                                                   @PathVariable UUID userId) {
+    public ResponseEntity<Void> removeRoleFromUser(
+            @PathVariable UUID roleId,
+            @PathVariable UUID userId
+    ) {
         roleService.removeRoleFromUser(roleId, userId);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/{roleId}/privileges")
-    public ResponseEntity<RoleResponse> updatePrivileges(@PathVariable UUID roleId,
-                                                         @RequestBody List<String> privileges) {
+    public ResponseEntity<RoleResponse> updatePrivileges(
+            @PathVariable UUID roleId,
+            @RequestBody List<String> privileges
+    ) {
         return ResponseEntity.ok(roleService.updatePrivileges(roleId, privileges));
     }
 }

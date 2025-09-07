@@ -1,5 +1,6 @@
 package pl.szyorz.storybook.entity.chapter;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,8 +17,10 @@ public class ChapterController {
 
 
     @GetMapping("/api/book/{bookId}/chapter/{chapterNumber}")
-    public ResponseEntity<ChapterContentResponse> getChapterContent(@PathVariable("bookId") UUID bookId,
-                                                                    @PathVariable("chapterNumber") int chapterNumber)
+    public ResponseEntity<ChapterContentResponse> getChapterContent(
+            @PathVariable("bookId") UUID bookId,
+            @PathVariable("chapterNumber") int chapterNumber
+    )
     {
         return chapterService.getChapterContent(bookId, chapterNumber)
                 .map(ResponseEntity::ok)
@@ -26,8 +29,10 @@ public class ChapterController {
 
     @PatchMapping(value = "/api/chapter/{chapterId}", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ChapterContentResponse> updateChapter(@PathVariable("chapterId") UUID chapterId,
-                                                                @RequestBody UpdateChapterRequest req) {
+    public ResponseEntity<ChapterContentResponse> updateChapter(
+            @PathVariable("chapterId") UUID chapterId,
+            @Valid @RequestBody UpdateChapterRequest req
+    ) {
         return chapterService.updateChapter(chapterId, req)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.badRequest().build());

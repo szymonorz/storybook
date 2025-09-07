@@ -1,6 +1,10 @@
 package pl.szyorz.storybook.entity.book.data;
 
-import java.util.List;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
-public record CreateBookRequest(String title, String description, List<String> tags, List<String> keywords) {
+public record CreateBookRequest(
+        @Size(min = 1, max = 200) @NotNull String title,
+        @Size(min = 1, max = 2000) @Nullable String description) {
 }

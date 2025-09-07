@@ -77,7 +77,7 @@ class BookTests {
 
     @Test
     void createBook_shouldReturn200OnSuccess() throws Exception {
-        CreateBookRequest req = new CreateBookRequest("My Book", "About stuff", List.of("tag"), List.of("keyword"));
+        CreateBookRequest req = new CreateBookRequest("My Book", "About stuff");
         BookResponse created = sampleBook(UUID.randomUUID());
         given(bookService.createBook(any(CreateBookRequest.class), eq("adam"))).willReturn(Optional.of(created));
 
@@ -93,7 +93,7 @@ class BookTests {
 
     @Test
     void createBook_shouldReturn400OnFailure() throws Exception {
-        CreateBookRequest req = new CreateBookRequest("My Book", "About stuff",  List.of("tag"), List.of("keyword"));
+        CreateBookRequest req = new CreateBookRequest("My Book", "About stuff");
         given(bookService.createBook(any(CreateBookRequest.class), eq("adam"))).willReturn(Optional.empty());
 
         mockMvc.perform(post("/api/book")

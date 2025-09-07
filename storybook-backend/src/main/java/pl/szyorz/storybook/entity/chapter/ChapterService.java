@@ -2,6 +2,7 @@ package pl.szyorz.storybook.entity.chapter;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import pl.szyorz.storybook.entity.chapter.data.ChapterContentResponse;
 import pl.szyorz.storybook.entity.chapter.data.UpdateChapterRequest;
@@ -43,6 +44,9 @@ public class ChapterService {
         );
     }
 
+    @PreAuthorize(
+            "hasAuthority('SUPERUSER') or hasAuthority('MODERATE_CONTENT') or @userSecurity.isChapterAuthor(#chapterId, authentication)"
+    )
     public Optional<ChapterContentResponse> updateChapter(UUID chapterId, UpdateChapterRequest req) {
         return chapterRepository.findById(chapterId).map(ch -> {
             if (req.title() != null) ch.setTitle(req.title());

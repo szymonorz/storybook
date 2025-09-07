@@ -66,7 +66,6 @@ class JWTTests {
 
         when(userRepository.findByUsername("adam")).thenReturn(Optional.of(user));
         when(roleRepository.findAllByUsersId(userId)).thenReturn(List.of(role));
-        // valid password is "1234"
         when(passwordEncoder.matches(eq("1234"), anyString())).thenReturn(true);
     }
 

@@ -9,7 +9,6 @@ import pl.szyorz.storybook.entity.user.User;
 import pl.szyorz.storybook.entity.user.UserRepository;
 import pl.szyorz.storybook.entity.user.UserService;
 import pl.szyorz.storybook.entity.user.data.DetailedUserResponse;
-import pl.szyorz.storybook.entity.user.data.UserResponse;
 
 import java.util.*;
 
@@ -32,11 +31,11 @@ public class RoleService {
         return roleRepository.findByNameIn(roleNames);
     }
 
-    public List<Role> getUserRoles(UUID userId) {
+    public List<Role> findRolesByUserId(UUID userId) {
         return roleRepository.findAllByUsersId(userId);
     }
 
-    public List<RoleResponse> getAllRoles() {
+    public List<RoleResponse> findAllRoles() {
         return roleRepository.findAll()
                 .stream()
                 .map(this::convertDBtoAPIRole)
