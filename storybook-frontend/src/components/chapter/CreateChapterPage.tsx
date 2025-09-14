@@ -1,20 +1,10 @@
 import { useNavigate, useParams } from "react-router"
-import { useForm } from "react-hook-form"
-import { createChapter, NewBookChapterRequest } from "../../utils/api/chapter"
-import { useTranslation } from "react-i18next"
+import { createChapter, CreateOrPatchBookRequest } from "../../utils/api/chapter"
 import { useEffect } from "react"
+import ChapterForm, { ChapterFormValues } from "./ChapterForm"
 
-interface CreateChapterFormValues {
-    chapterTitle: string,
-    chapterDescription: string,
-    authorNote: string,
-    chapterContent: string
-}
-
-export default function CreateOrEditChapterPage() {
-    const {register, handleSubmit} = useForm<CreateChapterFormValues>()
+export default function CreateChapterPage() {
     const navigate = useNavigate()
-    const {t} = useTranslation()
     const {bookId} = useParams()
 
     useEffect(() => {
@@ -24,9 +14,9 @@ export default function CreateOrEditChapterPage() {
         }
     }, [])
 
-    function onSubmit(data: CreateChapterFormValues) {
+    function onSubmit(data: ChapterFormValues) {
     
-        const reqData: NewBookChapterRequest = {
+        const reqData: CreateOrPatchBookRequest = {
             bookId: bookId!,
             ...data
         }
@@ -40,13 +30,7 @@ export default function CreateOrEditChapterPage() {
     return (
         <div className="page">
             <div className="main-component">
-                <form className="create-form chapter-form" onSubmit={handleSubmit(onSubmit)}>
-                    <input placeholder={t("chapter-form.placeholder.title")} type="text" {...register("chapterTitle")}/>
-                    <textarea className="authors-note" placeholder={t("chapter-form.placeholder.authors-note")} {...register("authorNote")}/>
-                    <textarea className="description" placeholder={t("chapter-form.placeholder.description")} {...register("chapterDescription")}/>
-                    <textarea placeholder="..." className="chapter-content" {...register("chapterContent")}/>
-                    <button type="submit">{t("chapter-form.submit")}</button>
-                </form>
+                <ChapterForm onSubmit={onSubmit}/>
             </div>
         </div>
     )

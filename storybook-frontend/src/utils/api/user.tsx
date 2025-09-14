@@ -1,8 +1,11 @@
 import { config } from "../config"
+import { UserRole } from "./role"
 
 interface UserResponse {
     id: string,
-    username: string
+    username: string,
+    email: string,
+    userRoles: UserRole[]
 }
 
 interface CreateUserRequest {
@@ -14,6 +17,12 @@ interface CreateUserRequest {
 interface LoginRequest {
     username: string,
     password: string
+}
+
+interface PatchUserRequest {
+    username: string | null,
+    email: string | null,
+    password: string | null
 }
 
 interface TokenResponse {
@@ -62,6 +71,21 @@ export async function getCurrentUser(): Promise<UserResponse> {
 
     const response = await fetch(`${config.url}/api/currentuser`, {
         method: "GET",
+        headers: new Headers({"Authorization": `Bearer ${token}`, "Content-Type": "application/json"})
+    })
+
+    return response.json()
+}
+
+export async function patchUser(req: PatchUserRequest, userId: string): Promise<UserResponse> {
+    const token = localStorage.getItem("_auth_token")
+    if(!token) {
+        throw new Error("Not logged in")
+    }
+
+    const response = await fetch(`${config.url}/api/user/${userId}`, {
+        method: "PATCH",
+        body: JSON.stringify(req),
         headers: new Headers({"Authorization": `Bearer ${token}`, "Content-Type": "application/json"})
     })
 

@@ -4,7 +4,7 @@ export interface ChapterContentResponse {
     id: string,
     title: string,
     description: string,
-    authorNote: string,
+    authorsNote: string,
     content: string,
     position: number
 }
@@ -16,19 +16,30 @@ export interface ShortChapterResponse {
     position: number
 }
 
-export interface NewBookChapterRequest {
+export interface CreateOrPatchBookRequest {
     bookId: string,
     chapterTitle: string,
     chapterDescription: string,
-    authorNote: string,
+    authorsNote: string,
     chapterContent: string
 }
 
 
-export async function createChapter(request: NewBookChapterRequest): Promise<ShortChapterResponse> {
+export async function createChapter(request: CreateOrPatchBookRequest): Promise<ShortChapterResponse> {
     const token = localStorage.getItem('_auth_token')
     const response = await fetch(`${config.url}/api/book/chapter`, {
         method: "POST",
+        body: JSON.stringify(request),
+        headers: new Headers({"Authorization": `Bearer ${token}`, "Content-Type": "application/json"})
+    })
+
+    return response.json()
+}
+
+export async function patchChapter(chapterId: string, request: CreateOrPatchBookRequest): Promise<ShortChapterResponse> {
+    const token = localStorage.getItem('_auth_token')
+    const response = await fetch(`${config.url}/api/chapter/${chapterId}`, {
+        method: "PATCH",
         body: JSON.stringify(request),
         headers: new Headers({"Authorization": `Bearer ${token}`, "Content-Type": "application/json"})
     })

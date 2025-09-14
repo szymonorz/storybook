@@ -10,17 +10,26 @@ interface BookResponse {
     chapters: ShortChapterResponse[]
 }
 
-interface CreateBookRequest {
+interface CreateOrPatchBookRequest {
     title: string,
-    description: string,
-    tags: string[],
-    keywords: string[]
+    description: string
 }
 
-export async function createBook(req: CreateBookRequest): Promise<BookResponse> {
+export async function createBook(req: CreateOrPatchBookRequest): Promise<BookResponse> {
     const token = localStorage.getItem("_auth_token")
     const response = await fetch(`${config.url}/api/book`, {
         method: "POST",
+        body: JSON.stringify(req),
+        headers: new Headers({"Authorization": `Bearer ${token}`, "Content-Type": "application/json"})
+    }) 
+
+    return response.json()
+}
+
+export async function patchBook(bookId: string, req: CreateOrPatchBookRequest): Promise<BookResponse> {
+    const token = localStorage.getItem("_auth_token")
+    const response = await fetch(`${config.url}/api/book/${bookId}`, {
+        method: "PATCH",
         body: JSON.stringify(req),
         headers: new Headers({"Authorization": `Bearer ${token}`, "Content-Type": "application/json"})
     }) 
@@ -66,48 +75,6 @@ export async function getLatestBooks(): Promise<BookResponse[]> {
     })
 
     return response.json()
-}
-
-export function getTopBooks(): BookResponse[] {
-    //TODO: axios api call
-
-    return [
-        {
-            id: "aaaa", title: "AAAAAA", description: "AAAAAAAAAAA",
-            author: { id: "xxxx", username: "xxxxxx" },
-            chapters: []
-        },
-        {
-            id: "bbbb", title: "BBBBBBB", description: "AAAAAAAAAAA",
-            author: { id: "xxxx", username: "xxxxxx" },
-            chapters: []
-        },
-        {
-            id: "ccccc", title: "CCCCCCC", description: "AAAAAAAAAAA",
-            author: { id: "xxxx", username: "xxxxxx" },
-            chapters: []
-        },
-        {
-            id: "dddd", title: "DDDDDD", description: "AAAAAAAAAAA",
-            author: { id: "xxxx", username: "xxxxxx" },
-            chapters: []
-        },
-        {
-            id: "ddqdd", title: "DDDDDD", description: "AAAAAAAAAAA",
-            author: { id: "xxxx", username: "xxxxxx" },
-            chapters: []
-        },
-        {
-            id: "eeee", title: "DDDDDD", description: "AAAAAAAAAAA",
-            author: { id: "xxxx", username: "xxxxxx" },
-            chapters: []
-        },
-        {
-            id: "fffff", title: "DDDDDD", description: "AAAAAAAAAAA",
-            author: { id: "xxxx", username: "xxxxxx" },
-            chapters: []
-        },
-    ]
 }
 
 

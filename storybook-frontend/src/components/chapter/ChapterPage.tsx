@@ -38,7 +38,7 @@ export default function ChapterPage() {
                     <div className="chapter-list clickable" onClick={() => chapterList()}>{t("chapter.back")}</div>
                     <ChapterSlider bookId={bookId} chapterNumber={Number(chapterNumber)}/>
                     <h1>{t("chapter-page.chapter")} {chapterNumber}: {chapter?.title}</h1>
-                    {chapter?.authorNote != undefined && chapter.authorNote.length != 0 ? <pre>{t("chapter-page.authors-note")}: {chapter?.authorNote}</pre>: <h3></h3>}
+                    {chapter?.authorsNote != undefined && chapter.authorsNote.length != 0 ? <pre>{t("chapter-page.authors-note")}: {chapter?.authorsNote}</pre>: <h3></h3>}
                     {chapter?.description != undefined && chapter.description.length != 0 ? 
                     (   <div>                 
                             <label htmlFor="description">{t("chapter-page.description")}:</label>
