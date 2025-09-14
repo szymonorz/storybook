@@ -47,6 +47,7 @@ public class BookController {
                                         c.getId(),
                                         c.getTitle(),
                                         c.getDescription(),
+                                        c.getAuthorNote(),
                                         c.getPosition()))
                 )
                 .orElseGet(() -> ResponseEntity.badRequest().build());
@@ -77,7 +78,7 @@ public class BookController {
 
     @PatchMapping("/api/book/{bookId}")
     public ResponseEntity<BookResponse> updateBook(
-            @PathVariable("bookId") java.util.UUID bookId,
+            @PathVariable("bookId") UUID bookId,
             @Valid @RequestBody UpdateBookRequest request
     ) {
         return bookService.updateBook(bookId, request)

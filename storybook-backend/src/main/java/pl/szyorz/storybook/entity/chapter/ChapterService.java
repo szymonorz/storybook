@@ -25,6 +25,11 @@ public class ChapterService {
                 .map(this::mapToContentResponse);
     }
 
+    public Optional<ChapterContentResponse> getChapterContentById(UUID chapterId) {
+        return chapterRepository.findById(chapterId)
+                .map(this::mapToContentResponse);
+    }
+
     public Optional<Chapter> getNextChapter(UUID bookId, int position) {
         return chapterRepository.findByBookIdAndPosition(bookId, position +1);
     }
@@ -49,10 +54,10 @@ public class ChapterService {
     )
     public Optional<ChapterContentResponse> updateChapter(UUID chapterId, UpdateChapterRequest req) {
         return chapterRepository.findById(chapterId).map(ch -> {
-            if (req.title() != null) ch.setTitle(req.title());
-            if (req.description() != null) ch.setDescription(req.description());
+            if (req.chapterTitle() != null) ch.setTitle(req.chapterTitle());
+            if (req.chapterDescription() != null) ch.setDescription(req.chapterDescription());
             if (req.authorsNote() != null) ch.setAuthorNote(req.authorsNote());
-            if (req.content() != null) ch.setContent(req.content());
+            if (req.chapterContent() != null) ch.setContent(req.chapterContent());
             Chapter saved = chapterRepository.save(ch);
             return new ChapterContentResponse(
                     saved.getId(),

@@ -128,6 +128,7 @@ public class BookService {
                         ch.getId(),
                         ch.getTitle(),
                         ch.getDescription(),
+                        ch.getAuthorNote(),
                         ch.getPosition()
                 ))
                 .toList();
@@ -171,7 +172,7 @@ public class BookService {
                 ),
                 saved.getChapters().stream().map(c ->
                         new ShortChapterResponse(
-                                c.getId(), c.getTitle(), c.getDescription(), c.getPosition()
+                                c.getId(), c.getTitle(), c.getDescription(), c.getAuthorNote(), c.getPosition()
                         )
                 ).toList()
         ));
@@ -210,6 +211,7 @@ public class BookService {
                                 chapter.getId(),
                                 chapter.getTitle(),
                                 chapter.getDescription(),
+                                chapter.getAuthorNote(),
                                 chapter.getPosition()
                         )
                 ).toList()

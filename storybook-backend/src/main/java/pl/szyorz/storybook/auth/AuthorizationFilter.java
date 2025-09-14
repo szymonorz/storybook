@@ -44,7 +44,8 @@ public class AuthorizationFilter extends OncePerRequestFilter {
                 new AntPathRequestMatcher("/auth/**", "POST" ),
                 new AntPathRequestMatcher("/api/user/register", "POST"),
                 new AntPathRequestMatcher("/api/user/**", "GET"),
-                new AntPathRequestMatcher("/api/book/**", "GET")
+                new AntPathRequestMatcher("/api/book/**", "GET"),
+                new AntPathRequestMatcher("/api/chapter/**", "GET")
             );
 
     @Override
