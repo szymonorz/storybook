@@ -1,11 +1,9 @@
 import { config } from "../config"
-import { UserRole } from "./role"
 
 interface UserResponse {
     id: string,
     username: string,
-    email: string,
-    userRoles: UserRole[]
+    email: string
 }
 
 interface CreateUserRequest {
@@ -20,7 +18,6 @@ interface LoginRequest {
 }
 
 interface PatchUserRequest {
-    username: string | null,
     email: string | null,
     password: string | null
 }

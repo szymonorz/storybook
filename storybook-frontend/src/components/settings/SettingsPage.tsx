@@ -6,7 +6,6 @@ import UserResponse, { getCurrentUser, patchUser } from "../../utils/api/user"
 import { AuthContext } from "../auth/AuthProvider"
 
 interface SettingsFormValues {
-    username: string,
     email: string,
     password: string
 }
@@ -19,12 +18,10 @@ export default function SettingsPage() {
 
     const [error, setError] = useState<string | null>()
     const [success, setSuccess] = useState<boolean>(false)
-    const [passwordChanged, isPasswordChanged] = useState<boolean>(false)
     const [userId, setUserId] = useState<string>()
     const [values, setValues] = useState<SettingsFormValues>()
     const {formState, register, handleSubmit} = useForm<SettingsFormValues>({
         defaultValues: {
-            username: "",
             email: "",
             password: ""
         },
@@ -34,15 +31,14 @@ export default function SettingsPage() {
     const {errors} = formState
 
     useEffect(() => {
+        console.log(success)
         getCurrentUser()
             .then((userResp) => {
                 setValues({
-                    username: userResp.username,
                     email: userResp.email,
                     password: ""
                 })
                 setUserId(userResp.id)
-                setSuccess(true)
             })
             .catch((err) => {
                 setError(err)
@@ -61,20 +57,15 @@ export default function SettingsPage() {
     function onSubmit(data: SettingsFormValues) {
         patchUser(
             {
-                username: data.username || null,
                 email: data.email || null,
                 password: data.password || null
             },
             userId! // should never be undefined
         ).then((userResp) => {
             setValues({
-                username: userResp.username,
                 email: userResp.email,
                 password: ""
             })
-            if(data.password) {
-                isPasswordChanged(true)
-            }
             setSuccess(true)
         }).catch((err) => setError(err))
     }
@@ -84,10 +75,6 @@ export default function SettingsPage() {
             { success ? <div>{t("settings_form.success")}</div> : null}
             { error ? <div>{t("settings_form.error")}</div> : null }
         <form className="settings-form" onSubmit={handleSubmit(onSubmit)}>
-            <label className="form-field">
-                <span className="form-text">{t("settings_form.username")}</span>
-                <input className="form-input" id="username" type="text" {...register("username")}/>
-            </label>
             <label className="form-field">
                 <span className="form-text"> {t("settings_form.email")} </span>
                 <input className="form-input" id="email" type="email" {...register("email", {

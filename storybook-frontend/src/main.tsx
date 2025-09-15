@@ -6,7 +6,6 @@ import RegisterPage from './components/auth/RegisterPage.tsx'
 import HomePage from './components/home/HomePage.tsx'
 import AuthorBooksPage from './components/books/AuthorBooksPage.tsx'
 import CreateBookPage from './components/books/CreateBookPage.tsx'
-import FavouritesPage from './pages/FavouritesPage.tsx'
 import SettingsPage from './components/settings/SettingsPage.tsx'
 import BookPage from './components/books/BookPage.tsx'
 import CreateChapterPage from './components/chapter/CreateChapterPage.tsx'
@@ -32,7 +31,6 @@ createRoot(document.getElementById('root')!).render(
           <Route path=':bookId/chapter/:chapterNumber/edit' element={<EditChapterPage/>}/>
         </Route>
         <Route path="createBook" element={<CreateBookPage/>}/>
-        <Route path="favourites" element={<FavouritesPage/>}/>
         <Route path="settings" element={<SettingsPage/>}/>
         <Route path="search" element={<SearchResultsPage/>}/>
         <Route path="settings" element={<SettingsPage/>}/>

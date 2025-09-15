@@ -4,16 +4,12 @@ import { getCurrentUser } from "../../utils/api/user";
 
 export interface Auth {
     auth: string | null,
-    privileges: string[],
-    setAuth: (c: string | null) => void,
-    setPrivileges: (p: string[]) => void 
+    setAuth: (c: string | null) => void
 }
 
 export const AuthContext = createContext<Auth>({
     auth: null,
-    privileges: [],
-    setAuth: () => {},
-    setPrivileges: () => {}
+    setAuth: () => {}
 })
 
 type AuthProviderProps = {
@@ -22,17 +18,13 @@ type AuthProviderProps = {
 
 export default function AuthProvider({children}: AuthProviderProps) {
     const [auth, setAuth] = useState<string| null>(null)
-    const [privileges, setPrivileges] = useState<string[]>([])
 
     useLayoutEffect(() => {
         const token = localStorage.getItem("_auth_token")
         if(token != null) {
             getCurrentUser()
-                .then((userResp) => {
+                .then(() => {
                     setAuth(token)
-                    const _tmp: string[] = []
-                    userResp.userRoles.forEach(role => _tmp.push(...role.privileges))
-                    setPrivileges(_tmp)
                 }).catch(() => {
                     console.log("hon2")
                     setAuth(null)
@@ -45,7 +37,7 @@ export default function AuthProvider({children}: AuthProviderProps) {
     }, [])
 
     return (
-        <AuthContext.Provider value={{auth, privileges, setAuth, setPrivileges}}>
+        <AuthContext.Provider value={{auth, setAuth}}>
             {children}
         </AuthContext.Provider>
     )
