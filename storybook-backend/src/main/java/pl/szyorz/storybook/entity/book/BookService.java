@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import pl.szyorz.storybook.entity.book.data.*;
+import pl.szyorz.storybook.entity.book.exception.BookNotFoundException;
 import pl.szyorz.storybook.entity.chapter.Chapter;
 import pl.szyorz.storybook.entity.chapter.ChapterRepository;
 import pl.szyorz.storybook.entity.chapter.data.ShortChapterResponse;
@@ -49,10 +50,20 @@ public class BookService {
     }
 
     @Transactional
+    @PreAuthorize("@userSecurity.isBookAuthor(#bookId, authentication)")
+    public void deleteBook(UUID bookId) {
+        Optional<Book> bookOptional = bookRepository.findById(bookId);
+        bookOptional.ifPresentOrElse( book -> bookRepository.delete(book), () -> {
+            throw new BookNotFoundException("Book not found");
+        });
+        bookRepository.deleteById(bookId);
+    }
+
+    @Transactional
     public Optional<Chapter> addNewChapter(NewBookChapterRequest bookChapterRequest) {
         Optional<Book> bookOptional = bookRepository.findById(bookChapterRequest.bookId());
         if (bookOptional.isEmpty()) {
-            throw new IllegalStateException("No book of id: " + bookChapterRequest.bookId() +" was found!");
+            throw new BookNotFoundException("No book of id: " + bookChapterRequest.bookId() +" was found!");
         }
         Book book = bookOptional.get();
         Chapter chapter = mapToChapterEntity(bookChapterRequest);
@@ -68,72 +79,6 @@ public class BookService {
                 .stream()
                 .filter(c -> c.getPosition() == chapter.getPosition())
                 .findFirst();
-    }
-
-    @Transactional
-    public void updateChapterPosition(ChapterOrderUpdateRequest req) {
-        Chapter chapter = chapterRepository.findByIdAndBookId(req.chapterId(), req.bookId())
-                .orElseThrow(() -> new IllegalArgumentException("No chapter of id: " + req.chapterId() + " and book_id: " + req.bookId() +" found"));
-        Book book = bookRepository.findById(req.bookId())
-                .orElseThrow(() -> new IllegalArgumentException("No book of id: " + req.bookId() + " found"));
-
-        int desiredPosition = req.desiredPosition();
-        book.getChapters().remove(chapter);
-        book.getChapters().forEach(c -> {
-            if (c.getPosition() >= desiredPosition)
-                c.setPosition(c.getPosition() + 1);
-        });
-        chapter.setPosition(desiredPosition);
-        book.getChapters().add(desiredPosition - 1, chapter);
-        for(int i=0; i<book.getChapters().size(); i++)
-            book.getChapters().get(i).setPosition(i + 1);
-
-        bookRepository.save(book);
-    }
-
-    @Transactional
-    public Optional<List<ShortChapterResponse>> reorderChapters(UUID bookId, List<UUID> orderedIds) {
-        if (orderedIds == null) return Optional.empty();
-
-        var bookOpt = bookRepository.findById(bookId);
-        if (bookOpt.isEmpty()) return Optional.empty();
-
-        List<Chapter> all = chapterRepository.findAllByBookIdOrderByPositionAsc(bookId);
-
-        Map<UUID, Chapter> byId = all.stream().collect(Collectors.toMap(Chapter::getId, c -> c));
-
-        for (UUID id : orderedIds) {
-            if (!byId.containsKey(id)) {
-                return Optional.empty();
-            }
-        }
-
-        List<Chapter> newOrder = new ArrayList<>(orderedIds.size() + Math.max(0, all.size() - orderedIds.size()));
-        for (UUID id : orderedIds) newOrder.add(byId.get(id));
-
-        Set<UUID> provided = new HashSet<>(orderedIds);
-        for (Chapter ch : all) {
-            if (!provided.contains(ch.getId())) newOrder.add(ch);
-        }
-
-        int pos = 1;
-        for (Chapter ch : newOrder) {
-            ch.setPosition(pos++);
-        }
-
-        chapterRepository.saveAll(newOrder);
-
-        List<ShortChapterResponse> response = newOrder.stream()
-                .map(ch -> new ShortChapterResponse(
-                        ch.getId(),
-                        ch.getTitle(),
-                        ch.getDescription(),
-                        ch.getAuthorNote(),
-                        ch.getPosition()
-                ))
-                .toList();
-
-        return Optional.of(response);
     }
 
     public List<BookResponse> latest(int n) {
@@ -154,14 +99,14 @@ public class BookService {
             UUID bookId,
             UpdateBookRequest req
     ) {
-        Optional<Book> ob = bookRepository.findById(bookId);
-        if (ob.isEmpty()) return Optional.empty();
+        Optional<Book> bookOptional = bookRepository.findById(bookId);
+        if (bookOptional.isEmpty()) throw new BookNotFoundException("No book of id: " + bookId + " was found.");
 
-        Book b = ob.get();
-        if (req.title() != null) b.setTitle(req.title());
-        if (req.description() != null) b.setDescription(req.description());
+        Book book = bookOptional.get();
+        if (req.title() != null) book.setTitle(req.title());
+        if (req.description() != null) book.setDescription(req.description());
 
-        Book saved = bookRepository.save(b);
+        Book saved = bookRepository.save(book);
 
         return Optional.of(new BookResponse(
                 saved.getId(),

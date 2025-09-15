@@ -53,20 +53,6 @@ public class BookController {
                 .orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
-    @PatchMapping(
-            value = "/api/book/{bookId}/chapters/positions",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    public ResponseEntity<List<ShortChapterResponse>> reorderChapters(
-            @PathVariable UUID bookId,
-            @RequestBody UpdateChaptersOrderRequest req
-    ) {
-        return bookService.reorderChapters(bookId, req.chapterIdsInOrder())
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.badRequest().build());
-    }
-
     @GetMapping("/api/book/{bookId}")
     public ResponseEntity<BookResponse> bookById(
             @PathVariable("bookId") UUID bookId
@@ -86,6 +72,14 @@ public class BookController {
                 .orElseGet(() -> ResponseEntity.status(403).build());
     }
 
+    @DeleteMapping("/api/book/{bookId}")
+    public ResponseEntity<String> deleteBook(
+            @PathVariable("bookId") UUID bookId
+    ) {
+        bookService.deleteBook(bookId);
+        return ResponseEntity.ok(bookId.toString());
+    }
+
     @PostMapping("/api/book")
     public ResponseEntity<BookResponse> createBook(
             Principal principal,
@@ -100,7 +94,6 @@ public class BookController {
 
     @GetMapping("/api/book/latest")
     public ResponseEntity<List<BookResponse>> latest(
-            Principal principal,
             @RequestParam(value = "n", defaultValue = "10", required = false) int n
     ) {
         return ResponseEntity.ok(bookService.latest(n));
@@ -108,7 +101,6 @@ public class BookController {
 
     @GetMapping("/api/book/search")
     public ResponseEntity<List<BookResponse>> search(
-            Principal principal,
             @RequestParam(value = "q") String lookup,
             @RequestParam(value = "n", defaultValue = "10", required = false) int n
     ) {

@@ -11,6 +11,7 @@ import pl.szyorz.storybook.entity.user.UserRepository;
 import pl.szyorz.storybook.entity.user.UserService;
 import pl.szyorz.storybook.entity.user.data.*;
 import pl.szyorz.storybook.entity.user.exception.AlreadyExistsException;
+import pl.szyorz.storybook.entity.user.exception.DoesntExistException;
 
 import java.util.*;
 
@@ -114,10 +115,10 @@ class UserServiceTests {
     }
 
     @Test
-    void updateUser_returnsEmptyWhenUserMissing() {
+    void updateUser_throwsWhenUserNotFound() {
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
         UpdateUserRequest req = new UpdateUserRequest("x", null);
-        assertTrue(userService.updateUser(userId, req).isEmpty());
+        assertThrows(DoesntExistException.class, () -> userService.updateUser(userId, req));
         verify(userRepository, never()).save(any());
     }
 }

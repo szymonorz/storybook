@@ -34,9 +34,6 @@ public class UserController {
                 .orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
-//    @PutMapping("/api/user/roles")
-//    public ResponseEntity<String>
-
     @GetMapping("/api/user/{userId}")
     public ResponseEntity<UserWithoutRolesResponse> getUser(
             @PathVariable("userId") UUID userId

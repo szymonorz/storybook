@@ -6,6 +6,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.szyorz.storybook.entity.user.data.*;
 import pl.szyorz.storybook.entity.user.exception.AlreadyExistsException;
+import pl.szyorz.storybook.entity.user.exception.DoesntExistException;
 
 import java.util.*;
 
@@ -39,9 +40,9 @@ public class UserService {
 
     @PreAuthorize("@userSecurity.isSelf(#userId, authentication)")
     public Optional<UserWithoutRolesResponse> updateUser(UUID userId, UpdateUserRequest req) {
-        var ou = userRepository.findById(userId);
-        if (ou.isEmpty()) return Optional.empty();
-        var user = ou.get();
+        var userOptional = userRepository.findById(userId);
+        if (userOptional.isEmpty()) throw new DoesntExistException("No such user");
+        var user = userOptional.get();
 
         if (req.email() != null && !req.email().equals(user.getEmail())) {
             if (userRepository.existsByEmail(req.email())) {

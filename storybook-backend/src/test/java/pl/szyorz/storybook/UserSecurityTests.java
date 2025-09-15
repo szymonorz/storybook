@@ -16,6 +16,7 @@ import pl.szyorz.storybook.config.JWTConfig;
 import pl.szyorz.storybook.entity.book.Book;
 import pl.szyorz.storybook.entity.book.BookRepository;
 import pl.szyorz.storybook.entity.book.data.UpdateBookRequest;
+import pl.szyorz.storybook.entity.chapter.Chapter;
 import pl.szyorz.storybook.entity.chapter.ChapterRepository;
 import pl.szyorz.storybook.entity.user.DetailsService;
 import pl.szyorz.storybook.entity.user.User;
@@ -29,6 +30,7 @@ import java.util.UUID;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static pl.szyorz.storybook.SecurityTestUtils.jwtFor;
@@ -137,5 +139,95 @@ class UserSecurityTests {
                 .andExpect(jsonPath("$.id").value(id.toString()))
                 .andExpect(jsonPath("$.title").value("New"))
                 .andExpect(jsonPath("$.description").value("New desc"));
+    }
+
+    @Test
+    void authorCanDeleteChapter() throws Exception {
+        UUID chapterId = UUID.randomUUID();
+
+        User author = new User();
+        author.setUsername("adam");
+        Book book = new Book();
+        book.setAuthor(author);
+        Chapter ch = new Chapter();
+        ch.setId(chapterId);
+        ch.setBook(book);
+
+        when(chapterRepository.findById(eq(chapterId))).thenReturn(Optional.of(ch));
+        UserDetails auth = new org.springframework.security.core.userdetails.User(
+                "adam","N/A", List.of(new SimpleGrantedAuthority("VIEW")));
+        when(detailsService.loadUserByUsername("adam")).thenReturn(auth);
+
+        mockMvc.perform(delete("/api/chapter/{id}", chapterId)
+                        .header("Authorization", jwtConfig.getPrefix() + jwtFor(jwtConfig,"adam"))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void nonAuthorCantDeleteChapter() throws Exception {
+        UUID chapterId = UUID.randomUUID();
+
+        User author = new User();
+        author.setUsername("owner");
+        Book book = new Book();
+        book.setAuthor(author);
+        Chapter ch = new Chapter();
+        ch.setId(chapterId);
+        ch.setBook(book);
+
+        when(chapterRepository.findById(eq(chapterId))).thenReturn(Optional.of(ch));
+        UserDetails intruder = new org.springframework.security.core.userdetails.User(
+                "intruder","N/A", List.of(new SimpleGrantedAuthority("VIEW")));
+        when(detailsService.loadUserByUsername("intruder")).thenReturn(intruder);
+
+        mockMvc.perform(delete("/api/chapter/{id}", chapterId)
+                        .header("Authorization", jwtConfig.getPrefix() + jwtFor(jwtConfig,"intruder"))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void authorCanDeleteBook() throws Exception {
+        UUID id = UUID.randomUUID();
+
+        User author = new User();
+        author.setUsername("adam");
+
+        Book b = new Book();
+        b.setId(id);
+        b.setAuthor(author);
+
+        when(bookRepository.findById(eq(id))).thenReturn(Optional.of(b));
+        UserDetails auth = new org.springframework.security.core.userdetails.User(
+                "adam","N/A", List.of(new SimpleGrantedAuthority("VIEW")));
+        when(detailsService.loadUserByUsername("adam")).thenReturn(auth);
+
+        mockMvc.perform(delete("/api/book/{id}", id)
+                        .header("Authorization", jwtConfig.getPrefix() + jwtFor(jwtConfig,"adam"))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void nonAuthorForbidden() throws Exception {
+        UUID id = UUID.randomUUID();
+
+        User author = new User();
+        author.setUsername("owner");
+
+        Book b = new Book();
+        b.setId(id);
+        b.setAuthor(author);
+
+        when(bookRepository.findById(eq(id))).thenReturn(Optional.of(b));
+        UserDetails intruder = new org.springframework.security.core.userdetails.User(
+                "intruder","N/A", List.of(new SimpleGrantedAuthority("VIEW")));
+        when(detailsService.loadUserByUsername("intruder")).thenReturn(intruder);
+
+        mockMvc.perform(delete("/api/book/{id}", id)
+                        .header("Authorization", jwtConfig.getPrefix() + jwtFor(jwtConfig,"intruder"))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
     }
 }

@@ -10,6 +10,7 @@ import pl.szyorz.storybook.entity.chapter.ChapterRepository;
 import pl.szyorz.storybook.entity.chapter.ChapterService;
 import pl.szyorz.storybook.entity.chapter.data.ChapterContentResponse;
 import pl.szyorz.storybook.entity.chapter.data.UpdateChapterRequest;
+import pl.szyorz.storybook.entity.chapter.exception.ChapterNotFoundException;
 
 import java.util.*;
 
@@ -124,5 +125,32 @@ class ChapterServiceTests {
         Optional<ChapterContentResponse> out = chapterService.updateChapter(UUID.randomUUID(), req);
         assertTrue(out.isEmpty());
         verify(chapterRepository, never()).save(any());
+    }
+
+    @Test
+    void shouldDelete() {
+        UUID id = UUID.randomUUID();
+        Chapter ch = new Chapter();
+        ch.setId(id);
+
+        when(chapterRepository.findById(id)).thenReturn(Optional.of(ch));
+
+        chapterService.deleteChapter(id);
+
+        verify(chapterRepository).findById(id);
+        verify(chapterRepository).delete(ch);
+        verify(chapterRepository).deleteById(id);
+    }
+
+    @Test
+    void shouldThrowChapterNotFoundException() {
+        UUID id = UUID.randomUUID();
+        when(chapterRepository.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(ChapterNotFoundException.class, () -> chapterService.deleteChapter(id));
+
+        verify(chapterRepository).findById(id);
+        verify(chapterRepository, never()).delete(any());
+        verify(chapterRepository, never()).deleteById(any());
     }
 }

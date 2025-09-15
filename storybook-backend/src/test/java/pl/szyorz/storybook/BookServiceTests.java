@@ -13,6 +13,7 @@ import pl.szyorz.storybook.entity.book.BookRepository;
 import pl.szyorz.storybook.entity.book.BookService;
 import pl.szyorz.storybook.entity.book.data.BookResponse;
 import pl.szyorz.storybook.entity.book.data.CreateBookRequest;
+import pl.szyorz.storybook.entity.book.exception.BookNotFoundException;
 import pl.szyorz.storybook.entity.chapter.Chapter;
 import pl.szyorz.storybook.entity.chapter.ChapterRepository;
 import pl.szyorz.storybook.entity.chapter.data.ShortChapterResponse;
@@ -157,49 +158,28 @@ class BookServiceTests {
     }
 
     @Test
-    void reorderChapters_movesSpecifiedThenAppendsOthers() {
-        List<UUID> order = List.of(ch3.getId(), ch1.getId());
+    void shouldDeleteBook() {
+        UUID id = UUID.randomUUID();
+        Book b = new Book();
+        b.setId(id);
 
-        var resultOpt = bookService.reorderChapters(bookId, order);
-        assertTrue(resultOpt.isPresent());
+        when(bookRepository.findById(id)).thenReturn(Optional.of(b));
 
-        List<ShortChapterResponse> res = resultOpt.get();
-        assertEquals(3, res.size());
-        assertEquals(ch3.getId(), res.get(0).id()); assertEquals(1, res.get(0).position());
-        assertEquals(ch1.getId(), res.get(1).id()); assertEquals(2, res.get(1).position());
-        assertEquals(ch2.getId(), res.get(2).id()); assertEquals(3, res.get(2).position());
+        bookService.deleteBook(id);
 
-        verify(chapterRepository).saveAll(saveAllCaptor.capture());
-        List<Chapter> saved = new ArrayList<>();
-        saveAllCaptor.getValue().forEach(saved::add);
-
-        assertEquals(ch3.getId(), saved.get(0).getId()); assertEquals(1, saved.get(0).getPosition());
-        assertEquals(ch1.getId(), saved.get(1).getId()); assertEquals(2, saved.get(1).getPosition());
-        assertEquals(ch2.getId(), saved.get(2).getId()); assertEquals(3, saved.get(2).getPosition());
+        verify(bookRepository).findById(id);
+        verify(bookRepository).delete(b);
     }
 
     @Test
-    void reorderChapters_returnsEmptyWhenUnknownChapterIdProvided() {
-        var result = bookService.reorderChapters(bookId, List.of(UUID.randomUUID()));
-        assertTrue(result.isEmpty());
-        verify(chapterRepository, never()).saveAll(any());
-    }
+    void shouldThrowBookNotFound() {
+        UUID id = UUID.randomUUID();
+        when(bookRepository.findById(id)).thenReturn(Optional.empty());
 
-    @Test
-    void reorderChapters_returnsEmptyWhenNullList() {
-        var result = bookService.reorderChapters(bookId, null);
-        assertTrue(result.isEmpty());
-        verify(chapterRepository, never()).saveAll(any());
-    }
+        assertThrows(BookNotFoundException.class, () -> bookService.deleteBook(id));
 
-    @Test
-    void reorderChapters_returnsEmptyWhenBookMissing() {
-        UUID other = UUID.randomUUID();
-        when(bookRepository.findById(other)).thenReturn(Optional.empty());
-
-        var result = bookService.reorderChapters(other, List.of(ch1.getId()));
-        assertTrue(result.isEmpty());
-        verify(chapterRepository, never()).saveAll(any());
+        verify(bookRepository).findById(id);
+        verify(bookRepository, never()).delete(any());
     }
 }
 

@@ -38,12 +38,21 @@ public class ChapterController {
                 .orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
+    @DeleteMapping(value = "/api/chapter/{chapterId}", consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> deleteChapter(
+            @PathVariable("chapterId") UUID chapterId
+    ) {
+        chapterService.deleteChapter(chapterId);
+        return ResponseEntity.ok(chapterId.toString());
+
+    }
+
     @PatchMapping(value = "/api/chapter/{chapterId}", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ChapterContentResponse> updateChapter(
             @PathVariable("chapterId") UUID chapterId,
-            @RequestBody UpdateChapterRequest req,
-            Principal principal
+            @RequestBody UpdateChapterRequest req
     ) {
         return chapterService.updateChapter(chapterId, req)
                 .map(ResponseEntity::ok)

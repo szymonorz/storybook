@@ -1,4 +1,4 @@
-package pl.szyorz.storybook.entity.chapter;
+package pl.szyorz.storybook.entity.chapter.data;
 
 import java.util.UUID;
 
