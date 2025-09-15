@@ -4,9 +4,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import pl.szyorz.storybook.entity.role.Role;
-import pl.szyorz.storybook.entity.role.RoleService;
-import pl.szyorz.storybook.entity.role.data.RoleResponse;
 import pl.szyorz.storybook.entity.user.data.*;
 import pl.szyorz.storybook.entity.user.exception.AlreadyExistsException;
 
@@ -17,7 +14,6 @@ import java.util.*;
 public class UserService {
     private PasswordEncoder passwordEncoder;
     private UserRepository userRepository;
-    private RoleService roleService;
 
     public Optional<User> createNewUser(CreateUserRequest req) {
         if(userRepository.existsByEmail(req.email())) {
@@ -37,38 +33,15 @@ public class UserService {
         return Optional.of(saved);
     }
 
-    public void updateUsersRoles(UpdateUserRolesRequest req) {
-        Optional<User> userOptional = userRepository.findById(req.userId());
-        if (userOptional.isEmpty()) {
-            throw new IllegalArgumentException("No such user");
-        }
-        User user = userOptional.get();
-
-        List<Role> rolesInDB = roleService.getRolesByNames(req.roles());
-        user.setRoles(rolesInDB);
-        userRepository.save(user);
-    }
-
     public Optional<UserWithoutRolesResponse> findById(UUID userId) {
-        return userRepository.findById(userId).map(user -> new UserWithoutRolesResponse(user.getId(), user.getUsername()));
+        return userRepository.findById(userId).map(user -> new UserWithoutRolesResponse(user.getId(), user.getUsername(), user.getEmail()));
     }
 
-    public List<Role> findUserRoles(UUID userId) {
-        return roleService.findRolesByUserId(userId);
-    }
-
-    @PreAuthorize("hasAuthority('SUPERUSER') or hasAuthority('MODERATE_USERS') or @userSecurity.isSelf(#userId, authentication)")
+    @PreAuthorize("@userSecurity.isSelf(#userId, authentication)")
     public Optional<UserWithoutRolesResponse> updateUser(UUID userId, UpdateUserRequest req) {
         var ou = userRepository.findById(userId);
         if (ou.isEmpty()) return Optional.empty();
         var user = ou.get();
-
-        if (req.username() != null && !req.username().equals(user.getUsername())) {
-            if (userRepository.existsByUsername(req.username())) {
-                throw new AlreadyExistsException("username already exists");
-            }
-            user.setUsername(req.username());
-        }
 
         if (req.email() != null && !req.email().equals(user.getEmail())) {
             if (userRepository.existsByEmail(req.email())) {
@@ -82,7 +55,7 @@ public class UserService {
         }
 
         var saved = userRepository.save(user);
-        return Optional.of(new UserWithoutRolesResponse(saved.getId(), saved.getUsername()));
+        return Optional.of(new UserWithoutRolesResponse(saved.getId(), saved.getUsername(), saved.getEmail()));
     }
 
     public Optional<DetailedUserResponse> findByUsername(String username) {
@@ -93,15 +66,7 @@ public class UserService {
     public static DetailedUserResponse convertDBUserToAPIUser(User user) {
         return new DetailedUserResponse(user.getId(),
                                 user.getUsername(),
-                                user.getEmail(),
-                                user.getRoles()
-                                        .stream()
-                                        .map(role ->  new RoleResponse(
-                                                role.getId(),
-                                                role.getName(),
-                                                role.getDescription(),
-                                                role.getPrivileges()
-                                        )).toList()
+                                user.getEmail()
         );
     }
 

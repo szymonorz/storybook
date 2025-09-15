@@ -148,7 +148,7 @@ public class BookService {
     }
 
     @PreAuthorize(
-            "hasAuthority('SUPERUSER') or @userSecurity.isBookAuthor(#bookId, authentication)"
+            "@userSecurity.isBookAuthor(#bookId, authentication)"
     )
     public Optional<BookResponse> updateBook(
             UUID bookId,
@@ -170,6 +170,8 @@ public class BookService {
                 new UserResponse(
                         saved.getAuthor().getId(), saved.getAuthor().getUsername()
                 ),
+                saved.getCreatedAt(),
+                saved.getUpdatedAt(),
                 saved.getChapters().stream().map(c ->
                         new ShortChapterResponse(
                                 c.getId(), c.getTitle(), c.getDescription(), c.getAuthorNote(), c.getPosition()
@@ -206,6 +208,8 @@ public class BookService {
                         author.getId(),
                         author.getUsername()
                 ),
+                book.getCreatedAt(),
+                book.getUpdatedAt(),
                 book.getChapters().stream().map(
                         chapter -> new ShortChapterResponse(
                                 chapter.getId(),

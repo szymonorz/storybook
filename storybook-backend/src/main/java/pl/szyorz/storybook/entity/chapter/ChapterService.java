@@ -50,7 +50,7 @@ public class ChapterService {
     }
 
     @PreAuthorize(
-            "hasAuthority('SUPERUSER') or hasAuthority('MODERATE_CONTENT') or @userSecurity.isChapterAuthor(#chapterId, authentication)"
+            "@userSecurity.isChapterAuthor(#chapterId, authentication)"
     )
     public Optional<ChapterContentResponse> updateChapter(UUID chapterId, UpdateChapterRequest req) {
         return chapterRepository.findById(chapterId).map(ch -> {

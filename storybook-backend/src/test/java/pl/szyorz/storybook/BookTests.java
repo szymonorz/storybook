@@ -17,6 +17,7 @@ import pl.szyorz.storybook.entity.chapter.Chapter;
 import pl.szyorz.storybook.entity.chapter.data.ShortChapterResponse;
 import pl.szyorz.storybook.entity.user.data.UserResponse;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -49,7 +50,9 @@ class BookTests {
                 "Title " + id.toString().substring(0, 8),
                 "Desc " + id.toString().substring(0, 8),
                 new UserResponse(UUID.randomUUID(), "adam"),
-                List.of(new ShortChapterResponse(UUID.randomUUID(), "Ch 1", "Intro", 1))
+                LocalDateTime.now(),
+                LocalDateTime.now(),
+                List.of(new ShortChapterResponse(UUID.randomUUID(), "Ch 1", "Intro", null,1))
         );
     }
 

@@ -11,10 +11,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-import pl.szyorz.storybook.entity.role.Role;
-import pl.szyorz.storybook.entity.role.RoleRepository;
-import pl.szyorz.storybook.entity.role.privilege.RolePrivilege;
 import pl.szyorz.storybook.entity.user.User;
 import pl.szyorz.storybook.entity.user.UserRepository;
 import pl.szyorz.storybook.entity.user.data.LoginRequest;
@@ -40,8 +36,6 @@ class JWTTests {
     @MockitoBean
     private UserRepository userRepository;
 
-    @MockitoBean
-    private RoleRepository roleRepository;
 
     @MockitoBean
     private PasswordEncoder passwordEncoder;
@@ -50,7 +44,6 @@ class JWTTests {
 
     private User user;
     private UUID userId;
-    private Role role;
 
     @BeforeEach
     void prepareMocks() {
@@ -60,12 +53,7 @@ class JWTTests {
         user.setUsername("adam");
         user.setPassword("ENCODED-PASS");
 
-        role = new Role();
-        role.setName("ADMIN");
-        role.setPrivileges(List.of(RolePrivilege.VIEW_ROLE));
-
         when(userRepository.findByUsername("adam")).thenReturn(Optional.of(user));
-        when(roleRepository.findAllByUsersId(userId)).thenReturn(List.of(role));
         when(passwordEncoder.matches(eq("1234"), anyString())).thenReturn(true);
     }
 

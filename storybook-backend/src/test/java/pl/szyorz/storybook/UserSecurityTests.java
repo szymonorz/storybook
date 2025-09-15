@@ -70,7 +70,7 @@ class UserSecurityTests {
                 "adam", "N/A", List.of());
         when(detailsService.loadUserByUsername("adam")).thenReturn(authUser);
 
-        UpdateUserRequest body = new UpdateUserRequest("adam2", "new@mail.tld", null);
+        UpdateUserRequest body = new UpdateUserRequest( "new@mail.tld", "P@ssw0rd222");
 
         mockMvc.perform(
                         patch("/api/user/{id}", id)
@@ -80,7 +80,7 @@ class UserSecurityTests {
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.userId").value(id.toString()))
-                .andExpect(jsonPath("$.username").value("adam2"));
+                .andExpect(jsonPath("$.email").value("new@mail.tld"));
     }
 
     @Test
@@ -92,10 +92,10 @@ class UserSecurityTests {
         dbUser.setUsername("owner");
         when(userRepository.findById(eq(id))).thenReturn(Optional.of(dbUser));
 
-        UpdateUserRequest body = new UpdateUserRequest("xxx", null, null);
+        UpdateUserRequest body = new UpdateUserRequest("xxx@mail.com", null);
 
         UserDetails intruder = new org.springframework.security.core.userdetails.User(
-                "intruder", "N/A", List.of(new SimpleGrantedAuthority("VIEW")));
+                "intruder", "N/A", List.of());
         when(detailsService.loadUserByUsername("intruder")).thenReturn(intruder);
 
         mockMvc.perform(
@@ -105,34 +105,6 @@ class UserSecurityTests {
                                 .content(mapper.writeValueAsString(body))
                 )
                 .andExpect(status().isForbidden());
-    }
-
-    @Test
-    void superuserAllowed() throws Exception {
-        UUID id = UUID.randomUUID();
-
-        User dbUser = new User();
-        dbUser.setId(id);
-        dbUser.setUsername("owner");
-        when(userRepository.findById(eq(id))).thenReturn(Optional.of(dbUser));
-        when(userRepository.existsByUsername("bossed")).thenReturn(false);
-        when(userRepository.save(any(User.class))).thenAnswer(inv -> inv.getArgument(0));
-
-        UserDetails boss = new org.springframework.security.core.userdetails.User(
-                "boss", "N/A", List.of(new SimpleGrantedAuthority("SUPERUSER")));
-        when(detailsService.loadUserByUsername("boss")).thenReturn(boss);
-
-        UpdateUserRequest body = new UpdateUserRequest("bossed", null, null);
-
-        mockMvc.perform(
-                        patch("/api/user/{id}", id)
-                                .header("Authorization", jwtConfig.getPrefix() + jwtFor(jwtConfig,"boss"))
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(mapper.writeValueAsString(body))
-                )
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.userId").value(id.toString()))
-                .andExpect(jsonPath("$.username").value("bossed"));
     }
 
     @Test

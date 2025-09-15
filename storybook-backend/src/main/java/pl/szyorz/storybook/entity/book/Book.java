@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 import pl.szyorz.storybook.entity.chapter.Chapter;
 import pl.szyorz.storybook.entity.user.User;
 

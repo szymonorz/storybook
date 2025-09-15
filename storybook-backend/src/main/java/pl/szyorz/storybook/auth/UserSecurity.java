@@ -3,12 +3,10 @@ package pl.szyorz.storybook.auth;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
-import pl.szyorz.storybook.entity.book.Book;
 import pl.szyorz.storybook.entity.book.BookRepository;
 import pl.szyorz.storybook.entity.chapter.ChapterRepository;
 import pl.szyorz.storybook.entity.user.UserRepository;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Component("userSecurity")

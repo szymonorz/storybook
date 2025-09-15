@@ -57,7 +57,7 @@ class ChapterServiceTests {
         assertEquals(ch.getId(), r.id());
         assertEquals("T", r.title());
         assertEquals("D", r.description());
-        assertEquals("N", r.authorNote());
+        assertEquals("N", r.authorsNote());
         assertEquals("C", r.content());
         assertEquals(5, r.position());
     }
@@ -109,7 +109,7 @@ class ChapterServiceTests {
         ChapterContentResponse r = out.get();
         assertEquals("New", r.title());               // changed
         assertEquals("OldD", r.description());        // unchanged
-        assertEquals("NewNote", r.authorNote());      // changed
+        assertEquals("NewNote", r.authorsNote());      // changed
         assertEquals("OldC", r.content());            // unchanged
         assertEquals(2, r.position());
 
