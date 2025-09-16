@@ -8,6 +8,7 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageRequest;
 import pl.szyorz.storybook.entity.book.Book;
 import pl.szyorz.storybook.entity.book.BookRepository;
 import pl.szyorz.storybook.entity.book.BookService;
@@ -16,7 +17,6 @@ import pl.szyorz.storybook.entity.book.data.CreateBookRequest;
 import pl.szyorz.storybook.entity.book.exception.BookNotFoundException;
 import pl.szyorz.storybook.entity.chapter.Chapter;
 import pl.szyorz.storybook.entity.chapter.ChapterRepository;
-import pl.szyorz.storybook.entity.chapter.data.ShortChapterResponse;
 import pl.szyorz.storybook.entity.user.User;
 import pl.szyorz.storybook.entity.user.UserRepository;
 
@@ -124,7 +124,7 @@ class BookServiceTests {
         Book b1 = new Book(); b1.setId(UUID.randomUUID()); b1.setTitle("A"); b1.setDescription("DA"); b1.setAuthor(author);
         Book b2 = new Book(); b2.setId(UUID.randomUUID()); b2.setTitle("B"); b2.setDescription("DB"); b2.setAuthor(author);
 
-        when(bookRepository.latest(2)).thenReturn(List.of(b1, b2));
+        when(bookRepository.latest(PageRequest.of(0, 2))).thenReturn(List.of(b1, b2));
 
         // when
         var list = bookService.latest(2);
@@ -142,7 +142,7 @@ class BookServiceTests {
     void search_wrapsLookupWithWildcards_andMapsResults() {
         Book b = new Book(); b.setId(UUID.randomUUID()); b.setTitle("Title match"); b.setDescription("desc"); b.setAuthor(author);
 
-        when(bookRepository.search(anyString(), eq(5))).thenReturn(List.of(b));
+        when(bookRepository.search(anyString(), eq(PageRequest.of(0,5)))).thenReturn(List.of(b));
 
         // when
         var results = bookService.search("match", 5);
@@ -151,7 +151,7 @@ class BookServiceTests {
         assertEquals(1, results.size());
         assertEquals(b.getId(), results.get(0).id());
 
-        verify(bookRepository).search(searchLookupCaptor.capture(), eq(5));
+        verify(bookRepository).search(searchLookupCaptor.capture(), eq(PageRequest.of(0,5)));
         String used = searchLookupCaptor.getValue();
         assertTrue(used.startsWith("%") && used.endsWith("%"), "lookup should be wrapped with %");
         assertTrue(used.contains("match"));

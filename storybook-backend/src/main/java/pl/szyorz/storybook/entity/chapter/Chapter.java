@@ -5,8 +5,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.JdbcTypeCode;
 import pl.szyorz.storybook.entity.book.Book;
 
+import java.sql.Types;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
@@ -24,6 +26,7 @@ public class Chapter {
 
     @Id
     @GeneratedValue
+    @JdbcTypeCode(Types.VARCHAR)
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)

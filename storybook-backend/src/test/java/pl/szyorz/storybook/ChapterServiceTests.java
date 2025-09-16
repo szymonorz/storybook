@@ -160,4 +160,65 @@ class ChapterServiceTests {
         verify(chapterRepository, never()).delete(any());
         verify(chapterRepository, never()).deleteById(any());
     }
+
+    @Test
+    void shouldReindexChapterPositions() {
+        UUID bookId = UUID.randomUUID();
+        UUID removeId = UUID.randomUUID();
+
+        Book book = new Book();
+        book.setId(bookId);
+        book.setChapters(new ArrayList<>());
+
+        Chapter c1 = new Chapter(); c1.setId(UUID.randomUUID()); c1.setPosition(1); c1.setBook(book);
+        Chapter c2 = new Chapter(); c2.setId(removeId);          c2.setPosition(2); c2.setBook(book);
+        Chapter c3 = new Chapter(); c3.setId(UUID.randomUUID()); c3.setPosition(3); c3.setBook(book);
+
+        book.getChapters().addAll(List.of(c1, c2, c3));
+
+        when(chapterRepository.findById(removeId)).thenReturn(Optional.of(c2));
+        when(chapterRepository.findAllByBookIdOrderByPositionAsc(bookId))
+                .thenReturn(List.of(c1, c3));
+        when(chapterRepository.saveAll(anyIterable())).thenAnswer(inv -> {
+            List<Chapter> list = new ArrayList<>();
+            ((Iterable<Chapter>)inv.getArgument(0)).forEach(list::add);
+            return list;
+        });
+
+        chapterService.deleteChapter(removeId);
+
+        assertEquals(1, c1.getPosition());
+        assertEquals(2, c3.getPosition());
+
+        verify(chapterRepository).delete(c2);
+        verify(chapterRepository).findAllByBookIdOrderByPositionAsc(bookId);
+        verify(chapterRepository).saveAll(argThat(it -> {
+            List<Chapter> list = new ArrayList<>();
+            it.forEach(list::add);
+            return list.size() == 2
+                    && list.get(0).getId().equals(c1.getId()) && list.get(0).getPosition() == 1
+                    && list.get(1).getId().equals(c3.getId()) && list.get(1).getPosition() == 2;
+        }));
+    }
+
+    @Test
+    void shouldBeLeftWithNothingToReindex() {
+        UUID bookId = UUID.randomUUID();
+        UUID removeId = UUID.randomUUID();
+
+        Book book = new Book();
+        book.setId(bookId);
+        book.setChapters(new ArrayList<>());
+
+        Chapter only = new Chapter(); only.setId(removeId); only.setPosition(1); only.setBook(book);
+        book.getChapters().add(only);
+
+        when(chapterRepository.findById(removeId)).thenReturn(Optional.of(only));
+        when(chapterRepository.findAllByBookIdOrderByPositionAsc(bookId)).thenReturn(List.of());
+
+        chapterService.deleteChapter(removeId);
+
+        verify(chapterRepository).delete(only);
+        verify(chapterRepository, never()).saveAll(anyIterable());
+    }
 }

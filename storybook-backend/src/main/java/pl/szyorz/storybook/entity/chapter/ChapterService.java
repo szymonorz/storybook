@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import pl.szyorz.storybook.entity.book.Book;
 import pl.szyorz.storybook.entity.chapter.data.ChapterContentResponse;
 import pl.szyorz.storybook.entity.chapter.data.ChapterRequest;
 import pl.szyorz.storybook.entity.chapter.data.UpdateChapterRequest;
@@ -46,11 +47,29 @@ public class ChapterService {
     public void deleteChapter(UUID chapterId) {
         Optional<Chapter> chapterOptional = chapterRepository.findById(chapterId);
         chapterOptional.ifPresentOrElse(chapter -> {
-            chapter.getBook().getChapters().remove(chapter);
+            Book book = chapter.getBook();
+            book.getChapters().remove(chapter);
             chapterRepository.delete(chapter);
+
+            UUID bookId = book.getId();
+            if (bookId != null) {
+                List<Chapter> remaining = chapterRepository.findAllByBookIdOrderByPositionAsc(bookId);
+                int pos = 1;
+                for (Chapter c : remaining) {
+                    if (c.getPosition() != pos) {
+                        c.setPosition(pos);
+                    }
+                    pos++;
+                }
+                if (!remaining.isEmpty()) {
+                    chapterRepository.saveAll(remaining);
+                }
+            }
         }, () -> {
             throw new ChapterNotFoundException("Chapter not found");
         });
+
+
     }
 
     private ChapterContentResponse mapToContentResponse(Chapter chapter) {

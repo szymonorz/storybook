@@ -2,6 +2,7 @@ package pl.szyorz.storybook.entity.book;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import pl.szyorz.storybook.entity.book.data.*;
@@ -85,13 +86,13 @@ public class BookService {
     }
 
     public List<BookResponse> latest(int n) {
-        return bookRepository.latest(n)
+        return bookRepository.latest(PageRequest.of(0,n))
                 .stream().map(book -> mapToBookResponse(book, book.getAuthor())).toList();
     }
 
     public List<BookResponse> search(String lookup, int n) {
         String wildcardLookup = '%' + lookup + '%';
-        return bookRepository.search(wildcardLookup, n)
+        return bookRepository.search(wildcardLookup, PageRequest.of(0,n))
                 .stream().map(book -> mapToBookResponse(book, book.getAuthor())).toList();
     }
 

@@ -1,5 +1,6 @@
 package pl.szyorz.storybook.entity.book;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -18,31 +19,28 @@ public interface BookRepository extends CrudRepository<Book, UUID> {
 
     @Query(
             value = """
-                SELECT DISTINCT b FROM Book b JOIN Chapter c ON b = c.book
-                ORDER BY c.updatedAt, c.createdAt\s
-                LIMIT :n\s        
+                SELECT b FROM Book b
+                JOIN b.chapters c
+                GROUP BY b
+                ORDER BY MAX(c.updatedAt), MAX(c.createdAt)
             """
     )
-    List<Book> latest(@Param("n") int n);
+    List<Book> latest(Pageable pageable);
 
     @Query("""
-            SELECT DISTINCT b FROM Book b\s
-            JOIN Chapter c ON c.book = b\s
-            JOIN User a ON b.author = a\s
-            WHERE\s
-            a.username LIKE :lookup\s
-            OR\s
-            b.title LIKE :lookup\s
-            OR\s
-            b.description LIKE :lookup\s
-            OR\s
-            c.title LIKE :lookup\s
-            OR\s
-            c.description LIKE :lookup\s
-            OR\s
-            c.content LIKE :lookup\s
-            ORDER BY b.createdAt
-            LIMIT :n\s
+        SELECT b
+        FROM Book b
+        LEFT JOIN b.chapters c
+        LEFT JOIN b.author a
+        WHERE
+             LOWER(a.username)   LIKE LOWER(:lookup)
+          OR LOWER(b.title)       LIKE LOWER(:lookup)
+          OR LOWER(b.description) LIKE LOWER(:lookup)
+          OR LOWER(c.title)       LIKE LOWER(:lookup)
+          OR LOWER(c.description) LIKE LOWER(:lookup)
+          OR LOWER(c.content)     LIKE LOWER(:lookup)
+        GROUP BY b
+        ORDER BY COALESCE(MAX(c.updatedAt), b.updatedAt) DESC, b.createdAt DESC
             """)
-    List<Book> search(@Param("lookup") String lookup, @Param("n") int n);
+    List<Book> search(@Param("lookup") String lookup, Pageable pageable);
 }

@@ -4,9 +4,11 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.JdbcTypeCode;
 import pl.szyorz.storybook.entity.chapter.Chapter;
 import pl.szyorz.storybook.entity.user.User;
 
+import java.sql.Types;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +20,7 @@ public class Book {
 
     @Id
     @GeneratedValue
+    @JdbcTypeCode(Types.VARCHAR)
     private UUID id;
 
     @NotNull
@@ -34,5 +37,6 @@ public class Book {
 
     /* No collaboration is allowed, sorry */
     @ManyToOne
+    @JoinColumn(name = "author_id", nullable = false)
     private User author;
 }
