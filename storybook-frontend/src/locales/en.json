@@ -17,6 +17,7 @@
   "register_form.failed": "Failed to create  user",
   "register_form.field_required": "Field is mandatory",
   "register_form.password_criteria_not_met": "Password criteria not met",
+  "register_form.password_must_match": "Passwords do not match",
   "register_form.invalid_request": "Provided data is invalid. Make sure you filled out entire form correctly",
   "register_form.in_use": "Either email or username is already in use",
   "login_form.username": "Username",

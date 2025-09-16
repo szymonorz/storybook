@@ -47,7 +47,7 @@ export default function BookPage() {
                 : 
                 (<div className="book">
                     <div className="inline">
-                        <button onClick={() => navigate(`/book/${bookId}/edit`)}>{t("book.edit")}</button>
+                        { isOwner ? <button onClick={() => navigate(`/book/${bookId}/edit`)}>{t("book.edit")}</button> : <div></div> }
                         <div></div>
                         <div className="book-times">
                             <div className="book-last-updated">
