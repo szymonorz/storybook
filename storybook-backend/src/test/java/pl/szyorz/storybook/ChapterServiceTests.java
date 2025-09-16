@@ -128,7 +128,7 @@ class ChapterServiceTests {
     }
 
     @Test
-    void shouldDelete() {
+    void deleteChapter_shouldDelete() {
         UUID id = UUID.randomUUID();
         UUID bookId = UUID.randomUUID();
 
@@ -142,15 +142,17 @@ class ChapterServiceTests {
         ch.setBook(b);
 
         when(chapterRepository.findById(id)).thenReturn(Optional.of(ch));
+        when(chapterRepository.findAllByBookIdOrderByPositionAsc(bookId)).thenReturn(List.of());
 
         chapterService.deleteChapter(id);
 
         verify(chapterRepository).findById(id);
         verify(chapterRepository).delete(ch);
+        verify(chapterRepository, never()).saveAll(anyIterable());
     }
 
     @Test
-    void shouldThrowChapterNotFoundException() {
+    void deleteChapter_shouldThrowExceptionIfNotFound() {
         UUID id = UUID.randomUUID();
         when(chapterRepository.findById(id)).thenReturn(Optional.empty());
 
@@ -162,7 +164,7 @@ class ChapterServiceTests {
     }
 
     @Test
-    void shouldReindexChapterPositions() {
+    void deleteChapter_shouldFixChapterOrdering() {
         UUID bookId = UUID.randomUUID();
         UUID removeId = UUID.randomUUID();
 
@@ -199,26 +201,5 @@ class ChapterServiceTests {
                     && list.get(0).getId().equals(c1.getId()) && list.get(0).getPosition() == 1
                     && list.get(1).getId().equals(c3.getId()) && list.get(1).getPosition() == 2;
         }));
-    }
-
-    @Test
-    void shouldBeLeftWithNothingToReindex() {
-        UUID bookId = UUID.randomUUID();
-        UUID removeId = UUID.randomUUID();
-
-        Book book = new Book();
-        book.setId(bookId);
-        book.setChapters(new ArrayList<>());
-
-        Chapter only = new Chapter(); only.setId(removeId); only.setPosition(1); only.setBook(book);
-        book.getChapters().add(only);
-
-        when(chapterRepository.findById(removeId)).thenReturn(Optional.of(only));
-        when(chapterRepository.findAllByBookIdOrderByPositionAsc(bookId)).thenReturn(List.of());
-
-        chapterService.deleteChapter(removeId);
-
-        verify(chapterRepository).delete(only);
-        verify(chapterRepository, never()).saveAll(anyIterable());
     }
 }

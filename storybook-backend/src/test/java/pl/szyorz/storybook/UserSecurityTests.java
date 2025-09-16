@@ -55,7 +55,7 @@ class UserSecurityTests {
     private final ObjectMapper mapper = new ObjectMapper();
 
     @Test
-    void selfUpdateAllowed() throws Exception {
+    void updateUser_allowSelf() throws Exception {
         UUID id = UUID.randomUUID();
 
         User dbUser = new User();
@@ -86,7 +86,7 @@ class UserSecurityTests {
     }
 
     @Test
-    void otherUserForbidden() throws Exception {
+    void updateUser_forbidNotCurrentUser() throws Exception {
         UUID id = UUID.randomUUID();
 
         User dbUser = new User();
@@ -110,7 +110,7 @@ class UserSecurityTests {
     }
 
     @Test
-    void authorCanUpdate() throws Exception {
+    void updateBook_allowAuthor() throws Exception {
         UUID id = UUID.randomUUID();
 
         User author = new User();
@@ -142,7 +142,7 @@ class UserSecurityTests {
     }
 
     @Test
-    void authorCanDeleteChapter() throws Exception {
+    void deleteChapter_allowAuthor() throws Exception {
         UUID chapterId = UUID.randomUUID();
 
         User author = new User();
@@ -165,7 +165,7 @@ class UserSecurityTests {
     }
 
     @Test
-    void nonAuthorCantDeleteChapter() throws Exception {
+    void deleteChapter_forbidNonAuthor() throws Exception {
         UUID chapterId = UUID.randomUUID();
 
         User author = new User();
@@ -188,7 +188,7 @@ class UserSecurityTests {
     }
 
     @Test
-    void authorCanDeleteBook() throws Exception {
+    void deleteBook_allowAuthor() throws Exception {
         UUID id = UUID.randomUUID();
 
         User author = new User();
@@ -210,7 +210,7 @@ class UserSecurityTests {
     }
 
     @Test
-    void nonAuthorForbidden() throws Exception {
+    void deleteBook_forbidNonAuthor() throws Exception {
         UUID id = UUID.randomUUID();
 
         User author = new User();
