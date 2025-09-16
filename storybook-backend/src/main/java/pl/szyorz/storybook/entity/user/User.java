@@ -23,12 +23,6 @@ public class User {
     private String password;
     private String email;
 
-    @JoinTable(
-            name = "users_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-
     @OneToMany
     private Set<Book> books;
 }
