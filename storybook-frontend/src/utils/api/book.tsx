@@ -37,6 +37,16 @@ export async function patchBook(bookId: string, req: CreateOrPatchBookRequest): 
     return response.json()
 }
 
+export async function deleteBook(bookId: string): Promise<string> {
+    const token = localStorage.getItem('_auth_token')
+    const response = await fetch(`${config.url}/api/book/${bookId}`, {
+        method: "DELETE",
+        headers: new Headers({"Authorization": `Bearer ${token}`, "Content-Type": "application/json"})
+    })
+
+    return response.text()
+}
+
 export async function getUserBooks(userId: string) {
     const token = localStorage.getItem("_auth_token")
     const response = await fetch(`${config.url}/api/user/${userId}/books`, {

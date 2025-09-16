@@ -13,6 +13,7 @@ export default function AuthorBooksPage() {
     const [isOwner, setIsOwner] = useState<boolean>(false)
     const {t} = useTranslation()
     const [books, setBooks] = useState<BookResponse[]>([])
+    const [refresh, setRefresh] = useState<number>(1)
 
     useEffect(() => {
         const userId = searchParams.get("userId")
@@ -41,7 +42,7 @@ export default function AuthorBooksPage() {
                 .catch((err) => console.log(err))
 
         }
-    }, [searchParams])
+    }, [searchParams, refresh])
 
     return (
         <div className="page">
@@ -57,7 +58,11 @@ export default function AuthorBooksPage() {
                                 :
                                 <h1>{t("books.user-books", {user: author?.username})}</h1>
                             }
-                            <BookList books={books}/>
+                            <BookList 
+                                books={books}
+                                isOwner={isOwner}
+                                deleteCallback={() => setRefresh(refresh^refresh)}
+                                />
                             { isOwner ? <button onClick={() => navigate("/createBook")}>{t("books.create-book")}</button> : <></>}
                         </>
                     )

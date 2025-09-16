@@ -44,10 +44,12 @@ public class ChapterService {
     @PreAuthorize("@userSecurity.isChapterAuthor(#chapterId, authentication)")
     public void deleteChapter(UUID chapterId) {
         Optional<Chapter> chapterOptional = chapterRepository.findById(chapterId);
-        chapterOptional.ifPresentOrElse(chapter -> chapterRepository.delete(chapter), () -> {
+        chapterOptional.ifPresentOrElse(chapter -> {
+            chapter.getBook().getChapters().remove(chapter);
+            chapterRepository.delete(chapter);
+        }, () -> {
             throw new ChapterNotFoundException("Chapter not found");
         });
-        chapterRepository.deleteById(chapterId);
     }
 
     private ChapterContentResponse mapToContentResponse(Chapter chapter) {

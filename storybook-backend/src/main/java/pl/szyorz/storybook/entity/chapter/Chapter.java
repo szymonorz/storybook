@@ -8,6 +8,7 @@ import lombok.ToString;
 import pl.szyorz.storybook.entity.book.Book;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
 @Data
@@ -30,12 +31,6 @@ public class Chapter {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Book book;
-    /*
-    TODO: Bind to user/author and also to book
-
-    private Author author;
-    private Book book; <--- dunno if this should be called a book
-     */
 
     private String title;
     private String description;
@@ -44,14 +39,6 @@ public class Chapter {
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-
-//    @OneToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "previous_chapter")
-//    private Chapter previousChapter;
-//
-//    @OneToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "next_chapter")
-//    private Chapter nextChapter;
     private int position;
 
 
@@ -60,26 +47,14 @@ public class Chapter {
     // TODO: test this
     @Override
     public boolean equals(Object o) {
+        if (this == o) return true;
         if (!(o instanceof Chapter)) return false;
-        return  this.id == ((Chapter)o).id;
+        Chapter that = (Chapter) o;
+        return id != null && id.equals(that.id);
     }
 
     @Override
     public int hashCode() {
-        int result = 0;
-        result += this.id.hashCode();
-        result += this.content.hashCode();
-        result += this.description.hashCode();
-        result += this.title.hashCode();
-
-        return result;
+        return Objects.hashCode(id);
     }
-
-//    public boolean hasNextChapter() {
-//        return this.nextChapter.getId() != null;
-//    }
-//
-//    public boolean hasPreviousChapter() {
-//        return previousChapter.getId() != null;
-//    }
 }

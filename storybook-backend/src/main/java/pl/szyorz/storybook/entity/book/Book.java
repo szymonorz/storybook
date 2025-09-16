@@ -27,7 +27,7 @@ public class Book {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "book", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "book", fetch = FetchType.EAGER, orphanRemoval = true)
     @OrderBy("position ASC")
     @EqualsAndHashCode.Exclude
     private List<Chapter> chapters = new ArrayList<>();
