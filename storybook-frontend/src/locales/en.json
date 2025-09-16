@@ -52,5 +52,14 @@
   "chapter-page.description": "Description",
   "chapter-page.authors-note": "Authors note",
   "search-page.results": "Search results for",
-  "search-bar.placeholder": "Search..."
+  "search-bar.placeholder": "Search...",
+  "book.last-update": "Last update:",
+  "book.created-time": "Created at:",
+  "book.edit": "Edit",
+  "book.delete-chapter": "Delete chapter",
+  "book-preview.delete-book": "Delete book",
+  "settings_form.email": "Change email",
+  "settings_form.password": "Change password",
+  "settings_form.success": "Data updated",
+  "settings_form.save": "Save changes"
 }

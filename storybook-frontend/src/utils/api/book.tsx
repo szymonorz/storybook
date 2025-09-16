@@ -7,6 +7,8 @@ interface BookResponse {
     title: string,
     description: string
     author: UserResponse,
+    createdAt: string,
+    updatedAt: string,
     chapters: ShortChapterResponse[]
 }
 

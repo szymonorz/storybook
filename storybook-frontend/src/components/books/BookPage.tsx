@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next"
 import BookResponse, { getBookInfo } from "../../utils/api/book"
 import ChapterPreview from "../chapter/ChapterPreview"
 import { getCurrentUser } from "../../utils/api/user"
+import formatDate from "../../utils/date"
 
 export default function BookPage() {
 
@@ -45,10 +46,24 @@ export default function BookPage() {
                 (<div>Book not found</div>) 
                 : 
                 (<div className="book">
-                    <button onClick={() => navigate(`/book/${bookId}/edit`)}>{t("book.edit")}</button>
+                    <div className="inline">
+                        <button onClick={() => navigate(`/book/${bookId}/edit`)}>{t("book.edit")}</button>
+                        <div></div>
+                        <div className="book-times">
+                            <div className="book-last-updated">
+                                <label>{t("book.created-time")}</label>
+                                <div>{formatDate(bookState.createdAt)}</div>
+                            </div>
+                            <hr></hr>
+                            <div className="book-last-updated">
+                                <label>{t("book.last-update")}</label>
+                                <div>{formatDate(bookState.updatedAt)}</div>
+                            </div>
+                        </div>
+                    </div>
                     <h1>{bookState.title}</h1>
                     <h3>{t("book.author")}: {bookState?.author.username}</h3>
-                    <label>{t("book.description")}</label>
+                    <span>{t("book.description")}</span>
                     <p>{bookState.description}</p>
                     <div className="book-chapter-list">
                         <h5>{t("book.chapters")}:</h5>

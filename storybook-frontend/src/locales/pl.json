@@ -52,5 +52,14 @@
   "chapter-page.description": "Opis",
   "chapter-page.authors-note": "Notatka od autora",
   "search-page.results": "Wyniki wyszukiwania dla",
-  "search-bar.placeholder": "Szukaj..."
+  "search-bar.placeholder": "Szukaj...",
+  "book.last-update": "Ostatnio zaktualizowano:",
+  "book.created-time": "Utworzono:",
+  "book.edit": "Edituj",
+  "book.delete-chapter": "Usuń rozdział",
+  "book-preview.delete-book": "Usuń książkę",
+  "settings_form.email": "Zmień email",
+  "settings_form.password": "Zmień hasło",
+  "settings_form.success": "Dane zaktualizowane",
+  "settings_form.save": "Zapisz zmiany"
 }

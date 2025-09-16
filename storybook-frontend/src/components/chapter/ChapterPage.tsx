@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router"
 import { ChapterContentResponse, getChapter } from "../../utils/api/chapter"
 import { useTranslation } from "react-i18next"
 import ChapterSlider from "./ChapterSlider"
+import formatDate from "../../utils/date"
 
 export default function ChapterPage() {
     
@@ -35,7 +36,21 @@ export default function ChapterPage() {
                 (<div>Chapter not found</div>) 
                 : 
                 (<div className="chapter">
-                    <div className="chapter-list clickable" onClick={() => chapterList()}>{t("chapter.back")}</div>
+                    <div className="inline">
+                        <div className="chapter-list clickable" onClick={() => chapterList()}>{t("chapter.back")}</div>
+                        <div></div>
+                        <div className="book-times">
+                            <div className="book-last-updated">
+                                <label>{t("book.created-time")}</label>
+                                { chapter?.createdAt != undefined ? <div>{formatDate(chapter?.createdAt)}</div> : null}
+                            </div>
+                            <hr></hr>
+                            <div className="book-last-updated">
+                                <label>{t("book.last-update")}</label>
+                                { chapter?.updatedAt != undefined ? <div>{formatDate(chapter?.updatedAt)}</div> : null}
+                            </div>
+                        </div>
+                    </div>
                     <ChapterSlider bookId={bookId} chapterNumber={Number(chapterNumber)}/>
                     <h1>{t("chapter-page.chapter")} {chapterNumber}: {chapter?.title}</h1>
                     {chapter?.authorsNote != undefined && chapter.authorsNote.length != 0 ? <pre>{t("chapter-page.authors-note")}: {chapter?.authorsNote}</pre>: <h3></h3>}
