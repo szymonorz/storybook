@@ -53,6 +53,7 @@ export default function EditChapterPage() {
     return (
         <div className="page">
             <div className="main-component">
+                {error ? <div>{error}</div> : null}
                 <ChapterForm onSubmit={onSubmit} formValues={formValues}/>
             </div>
         </div>

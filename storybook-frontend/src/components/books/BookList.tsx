@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import BookResponse from "../../utils/api/book";
 import BookPreview from "./BookPreview";
 

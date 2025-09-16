@@ -1,9 +1,8 @@
-import { useContext, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router"
-import UserResponse, { getCurrentUser, patchUser } from "../../utils/api/user"
-import { AuthContext } from "../auth/AuthProvider"
+import { getCurrentUser, patchUser } from "../../utils/api/user"
 
 interface SettingsFormValues {
     email: string,
@@ -14,7 +13,6 @@ export default function SettingsPage() {
 
     const {t} = useTranslation()
     const navigate = useNavigate()
-    const {setAuth} = useContext(AuthContext)
 
     const [error, setError] = useState<string | null>()
     const [success, setSuccess] = useState<boolean>(false)
@@ -46,13 +44,6 @@ export default function SettingsPage() {
                 navigate("/login?redirect=must_be_logged_in")
             })
     }, [])
-    // Questionable
-    // useEffect(() => {
-    //     if(passwordChanged && success) {
-    //         setAuth(null)
-    //         localStorage.removeItem("_auth_token")
-    //     }
-    // }, [passwordChanged])
 
     function onSubmit(data: SettingsFormValues) {
         patchUser(

@@ -23,7 +23,7 @@ services:
       - "8080:8080"
     environment:
       - SPRING_PROFILES_ACTIVE=postgres
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/postgres?currentSchema=public
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://database:5432/postgres?currentSchema=public
     networks:
       - app-network
 
