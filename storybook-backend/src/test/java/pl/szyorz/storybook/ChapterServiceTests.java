@@ -130,8 +130,16 @@ class ChapterServiceTests {
     @Test
     void shouldDelete() {
         UUID id = UUID.randomUUID();
+        UUID bookId = UUID.randomUUID();
+
         Chapter ch = new Chapter();
         ch.setId(id);
+
+        Book b = new Book();
+        b.setId(bookId);
+
+        b.setChapters(new ArrayList<Chapter>(List.of(ch)));
+        ch.setBook(b);
 
         when(chapterRepository.findById(id)).thenReturn(Optional.of(ch));
 
@@ -139,7 +147,6 @@ class ChapterServiceTests {
 
         verify(chapterRepository).findById(id);
         verify(chapterRepository).delete(ch);
-        verify(chapterRepository).deleteById(id);
     }
 
     @Test

@@ -9,6 +9,7 @@ import pl.szyorz.storybook.entity.chapter.data.ChapterRequest;
 import pl.szyorz.storybook.entity.chapter.data.UpdateChapterRequest;
 import pl.szyorz.storybook.entity.chapter.exception.ChapterNotFoundException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -58,6 +59,8 @@ public class ChapterService {
                 chapter.getTitle(),
                 chapter.getDescription(),
                 chapter.getAuthorNote(),
+                chapter.getCreatedAt(),
+                chapter.getUpdatedAt(),
                 chapter.getContent(),
                 chapter.getPosition()
         );
@@ -72,12 +75,15 @@ public class ChapterService {
             if (req.chapterDescription() != null) ch.setDescription(req.chapterDescription());
             if (req.authorsNote() != null) ch.setAuthorNote(req.authorsNote());
             if (req.chapterContent() != null) ch.setContent(req.chapterContent());
+            ch.setUpdatedAt(LocalDateTime.now());
             Chapter saved = chapterRepository.save(ch);
             return new ChapterContentResponse(
                     saved.getId(),
                     saved.getTitle(),
                     saved.getDescription(),
                     saved.getAuthorNote(),
+                    saved.getCreatedAt(),
+                    saved.getUpdatedAt(),
                     saved.getContent(),
                     saved.getPosition()
             );

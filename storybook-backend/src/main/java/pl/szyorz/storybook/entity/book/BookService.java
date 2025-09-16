@@ -69,8 +69,11 @@ public class BookService {
         Chapter chapter = mapToChapterEntity(bookChapterRequest);
         chapter.setBook(book);
         chapter.setPosition(book.getChapters().size() + 1);
+        LocalDateTime now = LocalDateTime.now();
+        chapter.setCreatedAt(now);
+        chapter.setUpdatedAt(now);
         book.getChapters().add(chapter);
-        book.setUpdatedAt(LocalDateTime.now());
+        book.setUpdatedAt(now);
 
         Book updatedBook = bookRepository.save(book);
 

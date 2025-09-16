@@ -1,4 +1,4 @@
-package pl.szyorz.storybook.auth;
+package pl.szyorz.storybook;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
