@@ -1,6 +1,19 @@
 version: '3.8'
 
 services:
+  database:
+    image: 'postgres:17.6'
+    ports:
+      - 15432:5432
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=postgres
+    networks:
+      - app-network
+    volumes:
+      - ${PWD}/db-data/:/var/lib/postgresql/data/
+
   storybook-be:
     build:
       context: ./storybook-backend
@@ -9,9 +22,8 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - SPRING_PROFILES_ACTIVE=sqlite
-    volumes:
-      - db:/app/db
+      - SPRING_PROFILES_ACTIVE=postgres
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/postgres?currentSchema=public
     networks:
       - app-network
 
