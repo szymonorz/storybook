@@ -1,10 +1,12 @@
 package pl.szyorz.storybook;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ActiveProfiles;
 import pl.szyorz.storybook.entity.user.validator.PasswordValidator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@ActiveProfiles("test")
 class PasswordValidatorTests {
 
     private final PasswordValidator validator = new PasswordValidator();
